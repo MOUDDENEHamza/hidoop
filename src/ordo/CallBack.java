@@ -14,13 +14,17 @@ public class CallBack implements Serializable {
     /**
      * Attributes of Callback class
      */
+    private int count;
     private final Semaphore semaphore;        // The semaphore we will use
+    private int nbChunks;
 
     /**
      * Constructor of Callback class
      */
-    public CallBack() {
+    public CallBack(int nbChunks) {
+        this.count = 0;
         this.semaphore = new Semaphore(0);
+        this.nbChunks = nbChunks;
     }
 
     public Semaphore getSemaphore() {
@@ -34,7 +38,13 @@ public class CallBack implements Serializable {
     public void runMapDone() {
         try {
             System.out.println("map done");
-            this.getSemaphore().release();
+            if (this.count == this.nbChunks) {
+                System.out.println("map done : release");
+                this.getSemaphore().release();
+            } else {
+                System.out.println("map done : count++");
+                this.count++;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

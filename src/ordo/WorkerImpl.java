@@ -51,8 +51,8 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
     @Override
     public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException, InterruptedException {
-    	Thread mapProcess = new Thread(new MapProcess(m, reader, writer, cb));
-        mapProcess.start();
+    	Thread t = new Thread(new MapProcess(m, reader, writer, cb));
+        t.start();
     }
 
     /**
