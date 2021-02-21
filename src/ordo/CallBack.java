@@ -1,62 +1,20 @@
 package ordo;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.concurrent.Semaphore;
 
-/**
- * Reminder called when the execution of map is done
- *
- * @author Hamza Mouddene
- * @version 1.0
- */
-public class CallBack extends UnicastRemoteObject implements CallBackInterface {
+public interface CallBack extends Remote {
 
     /**
-     * Attributes of Callback class
+     * When the task is done, we increment the counter then if the counter is equal to the number of available fragments
+     * it prevents that the process has finished.
+     * @throws RemoteException
      */
-    private final Semaphore semaphore;        // The semaphore we will use
-    private int count;
-    private final int nbChunks;
+    public void runMapDone() throws RemoteException;
 
     /**
-     * Constructor of Callback class
+     *
+     * @throws RemoteException
      */
-    public CallBack(int nbChunks) throws RemoteException {
-        this.semaphore = new Semaphore(0);
-        this.count = 0;
-        this.nbChunks = nbChunks;
-    }
-
-    public Semaphore getSemaphore() {
-        return this.semaphore;
-    }
-
-    @Override
-    public void runMapDone() {
-        try {
-            System.out.println("map done");
-            System.out.println(this.count + " " + this.nbChunks);
-            if (this.count == this.nbChunks) {
-                System.out.println("map done : release");
-                this.getSemaphore().release();
-            } else {
-                System.out.println("map done : count++");
-                this.count++;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void waitForFinished() {
-        try {
-            System.out.println("wait map");
-            System.out.println(this.count + " " + this.nbChunks);
-            this.getSemaphore().acquire();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    public void waitForFinished() throws RemoteException;
 }

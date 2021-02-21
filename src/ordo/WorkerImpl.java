@@ -6,7 +6,6 @@ import map.Mapper;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.*;
 import java.rmi.server.UnicastRemoteObject;

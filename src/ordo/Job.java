@@ -6,10 +6,8 @@ import hdfs.*;
 
 import java.io.*;
 import java.util.concurrent.*;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.*;
 import java.util.*;
 
 /**
@@ -72,7 +70,7 @@ public class Job implements JobInterface {
             Request nameProviderRequest;
             int nbChunks;
             Format reader, writer;
-            CallBack[] callBacks;
+            CallBackImpl[] callBacks;
 
             // Get number of chunks from name provider
             if (this.mode.equals("local")) {
@@ -87,7 +85,7 @@ public class Job implements JobInterface {
             nbChunks = readRequest.size();
 
             // Reminder called when the execution of map is done
-            CallBackInterface cb = new CallBack(nbChunks);
+            CallBackImpl cb = new CallBackImpl(nbChunks);
             String[] fileNames = new String[nbChunks];
 
             // Map
