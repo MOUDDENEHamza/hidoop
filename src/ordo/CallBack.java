@@ -1,6 +1,7 @@
 package ordo;
 
-import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -9,21 +10,21 @@ import java.util.concurrent.Semaphore;
  * @author Hamza Mouddene
  * @version 1.0
  */
-public class CallBack implements Serializable {
+public class CallBack extends UnicastRemoteObject implements CallBackInterface {
 
     /**
      * Attributes of Callback class
      */
-    private int count;
     private final Semaphore semaphore;        // The semaphore we will use
-    private int nbChunks;
+    private int count;
+    private final int nbChunks;
 
     /**
      * Constructor of Callback class
      */
-    public CallBack(int nbChunks) {
-        this.count = 0;
+    public CallBack(int nbChunks) throws RemoteException {
         this.semaphore = new Semaphore(0);
+        this.count = 0;
         this.nbChunks = nbChunks;
     }
 
@@ -31,10 +32,7 @@ public class CallBack implements Serializable {
         return this.semaphore;
     }
 
-    /**
-     * When the task is done, we increment the counter then if the counter is equal to the number of available fragments
-     * it prevents that the process has finished
-     */
+    @Override
     public void runMapDone() {
         try {
             System.out.println("map done");
@@ -51,6 +49,7 @@ public class CallBack implements Serializable {
         }
     }
 
+    @Override
     public void waitForFinished() {
         try {
             System.out.println("wait map");
