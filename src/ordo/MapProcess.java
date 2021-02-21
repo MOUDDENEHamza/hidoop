@@ -3,6 +3,8 @@ package ordo;
 import formats.Format;
 import map.Mapper;
 
+import java.rmi.RemoteException;
+
 public class MapProcess implements Runnable {
 	Mapper m;
 	Format reader;
@@ -29,7 +31,11 @@ public class MapProcess implements Runnable {
 		writer.close();
 
 		// Report that the process has finished runMap task.
-		cb.runMapDone();
+		try {
+			cb.runMapDone();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
