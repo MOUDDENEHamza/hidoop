@@ -110,7 +110,9 @@ public class Job implements JobInterface {
                 fileNames[i] = inputFileName + "-chunk" + (i + 1);
             }
 
-            cb.getSemaphore().acquire();
+            for(int i = 0; i < nbChunks; i++) {
+                cb.waitForFinished();
+            }
 
             MergeFiles mf = new MergeFiles(fileNames);
             mf.mergeFiles(this.getInputFileName() + "-allChunks");
