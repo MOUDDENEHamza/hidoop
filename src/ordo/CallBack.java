@@ -18,10 +18,8 @@ public class CallBack implements Serializable {
 
     /**
      * Constructor of Callback class
-     *
-     * @param nbChunks the total number of fragments
      */
-    public CallBack(int nbChunks) {
+    public CallBack() {
         this.semaphore = new Semaphore(0);
     }
 

@@ -27,7 +27,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     static int id;              // The Id of the worker
     static String url;          // The url of the worker
     Registry registry;
-
+    MapProcess mapProcess = null;
     /**
      * Constructor of WorkerImpl class that creates a worker
      *
@@ -51,7 +51,10 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
     @Override
     public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException, InterruptedException {
-    	Thread mapProcess = new Thread(new MapProcess(m, reader, writer, cb));
+    	if (this.mapProcess == null) {
+            this.mapProcess = new MapProcess(m, reader, writer, cb);
+        }
+        Thread mapProcess = new Thread(this.mapProcess);
         mapProcess.start();
     }
 
