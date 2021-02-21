@@ -20,6 +20,37 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
+    public class MapProcess implements Runnable {
+        Mapper m;
+        Format reader;
+        Format writer;
+        CallBack cb;
+
+        public MapProcess(Mapper m, Format reader, Format writer, CallBack cb) {
+            this.m = m;
+            this.reader = reader;
+            this.writer = writer;
+            this.cb = cb;
+        }
+
+        public void run() {
+            // Open reader and writer
+            reader.open(Format.OpenMode.R);
+            writer.open(Format.OpenMode.W);
+
+            // Launch map
+            m.map(reader, writer);
+
+            // Close reader and writer
+            reader.close();
+            writer.close();
+
+            // Report that the process has finished runMap task.
+            cb.runMapDone();
+        }
+
+    }
+
     /**
      * Attributes of WorkerImpl class
      */
@@ -27,7 +58,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     static int id;              // The Id of the worker
     static String url;          // The url of the worker
     Registry registry;
-    MapProcess mapProcess = null;
+    
     /**
      * Constructor of WorkerImpl class that creates a worker
      *
@@ -51,10 +82,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
     @Override
     public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException, InterruptedException {
-    	if (this.mapProcess == null) {
-            this.mapProcess = new MapProcess(m, reader, writer, cb);
-        }
-        Thread mapProcess = new Thread(this.mapProcess);
+    	Thread mapProcess = new Thread(new MapProcess(m, reader, writer, cb));
         mapProcess.start();
     }
 
