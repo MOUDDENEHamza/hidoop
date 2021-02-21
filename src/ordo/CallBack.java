@@ -54,6 +54,7 @@ public class CallBack implements Serializable {
     public void waitForFinished() {
         try {
             System.out.println("wait map");
+            System.out.println(this.count + " " + this.nbChunks);
             this.getSemaphore().acquire();
         } catch (Exception e) {
             e.printStackTrace();
