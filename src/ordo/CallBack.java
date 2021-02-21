@@ -35,6 +35,7 @@ public class CallBack implements Serializable {
      */
     public void runMapDone() {
         try {
+            System.out.println("map done");
             this.getSemaphore().release();
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,6 +44,7 @@ public class CallBack implements Serializable {
 
     public void waitForFinished() {
         try {
+            System.out.println("wait map");
             this.getSemaphore().acquire();
         } catch (Exception e) {
             e.printStackTrace();
