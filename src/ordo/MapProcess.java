@@ -7,7 +7,7 @@ public class MapProcess implements Runnable {
 	Mapper m;
 	Format reader;
 	Format writer;
-	CallBack cb;
+	CallBackInterface cb;
 
 	public MapProcess(Mapper m, Format reader, Format writer, CallBack cb) {
 		this.m = m;
