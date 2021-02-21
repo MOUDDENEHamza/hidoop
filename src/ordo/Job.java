@@ -87,7 +87,7 @@ public class Job implements JobInterface {
             nbChunks = readRequest.size();
 
             // Reminder called when the execution of map is done
-            CallBack cb = new CallBack();
+            CallBack cb = new CallBack(nbChunks);
             String[] fileNames = new String[nbChunks];
 
             // Map
