@@ -227,6 +227,8 @@ public class HdfsClient {
                 registry = LocateRegistry.getRegistry(args[3], NameProvider.NAME_PROVIDER_PORT);
             } else if (!(args[0].equals("write") || args[0].equals("read")) && args.length > 2) {
                 registry = LocateRegistry.getRegistry(args[2], NameProvider.NAME_PROVIDER_PORT);
+            } else if (args[0].equals("list") && args.length > 1) {
+                registry = LocateRegistry.getRegistry(args[1], NameProvider.NAME_PROVIDER_PORT);
             } else {
                 registry = LocateRegistry.getRegistry(NameProvider.NAME_PROVIDER_PORT);
             }

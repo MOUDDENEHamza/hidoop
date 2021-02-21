@@ -24,7 +24,7 @@ run_remote_hidoop() {
     terminator --title worker4 -e 'ssh hmoudden@fermat.enseeiht.fr "cd nosave/hadoop && java -cp src ordo.WorkerImpl 8004 4"; exec bash'
 
    sleep 5
-   terminator --title user -e 'ssh hmoudden@carbone.enseeiht.fr "cd nosave/hadoop && java -cp src application.MyMapReduce data/huge_file.txt remote && diff data/count-res data/huge_file.txt-res"; exec bash'
+   terminator --title user -e 'ssh hmoudden@carbone.enseeiht.fr "cd nosave/hadoop && java -cp src application.MyMapReduce data/data.txt remote && diff data/count-res data/data.txt-res"; exec bash'
 }
 
 ./clean.sh
