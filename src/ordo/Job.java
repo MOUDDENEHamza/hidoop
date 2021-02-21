@@ -27,7 +27,7 @@ public class Job implements JobInterface {
     private String inputFileName;                // The name of HDFS file
     private ArrayList<Worker> workers;           // List of workers
     private String mode;
-    String[] workersIp = {"147.127.133.2", "147.127.133.80", "147.127.133.163", "147.127.133.222"};
+    String[] workersIp = {"147.127.133.2", "147.127.133.80", "147.127.133.163", "147.127.135.222"};
 
     /**
      * Constructor of Job class
