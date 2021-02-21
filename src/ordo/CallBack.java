@@ -40,6 +40,7 @@ public class CallBack implements Serializable {
     public void runMapDone() {
         try {
             if (this.count == this.nbChunks) {
+                System.out.println("release");
                 this.getSemaphore().release();
             } else {
                 this.count++;
