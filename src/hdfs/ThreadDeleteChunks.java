@@ -3,9 +3,6 @@ package hdfs;
 import java.io.IOException;
 import java.net.Socket;
 
-/**
- * Describes a thread aiming to delete a chunk from the HDFS server
- */
 public class ThreadDeleteChunks implements Runnable {
     String hashChunkToDelete;
     ServerRecord serverToDeleteChunk;

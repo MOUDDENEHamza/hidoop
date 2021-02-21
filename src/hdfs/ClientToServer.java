@@ -1,23 +1,9 @@
 package hdfs;
 
-import java.net.Socket;
 import java.io.*;
+import java.net.Socket;
 
-/**
- * A collection of useful functions to communicate a chunk between a client and a HDFS server
- */
 public class ClientToServer {
-
-    /**
-     * Send a chunk from a client to a HDFS Server
-     * @param fname The file containing the chunk to send
-     * @param chunk The metadatas of the chunk to write to the server
-     * @param bufferSize The size of the buffer used to send the chunk
-     * @param server The server where the chunk should be written
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     */
     public static void writeChunkToServer(String fname, ChunkMetadata chunk, int bufferSize, Socket server)
             throws IOException, ClassNotFoundException, InterruptedException {
         ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
@@ -59,15 +45,6 @@ public class ClientToServer {
         }
     }
 
-    /**
-     * Read a chunk from a HDFS server. The chunk will be written to a temporary file (baseDir/hash.tmp)
-     * @param hash The hash of the chunk to retrieve
-     * @param baseDir The directory where the chunk will be written
-     * @param server The server where the chunk is stored
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
     public static String readFromServer(String hash, String baseDir, Socket server) throws IOException, ClassNotFoundException {
         String fileName = baseDir + "." + hash + ".tmp";
 
@@ -105,11 +82,6 @@ public class ClientToServer {
         return fileName;
     }
 
-    /**
-     * Ask a server to delete a chunk
-     * @param hash The hash of the chunk to delete
-     * @param server The server containing the chunk
-     */
     public static void deleteToServer(String hash, Socket server) {
         try {
             ObjectOutputStream outStream = new ObjectOutputStream(server.getOutputStream());

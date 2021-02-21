@@ -4,25 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Contains informations about the servers of the HDFS filesystem
- */
 public class FileRecord {
     private String fileName;
 
-    /**
-     * The chunks hash of a file. Each entry contains the hash of a chunk, the servers where it is stored, the part
-     * number of a file and the total number of chunks
-     */
-    private HashMap<String, Pair<ArrayList<ServerRecord>, Pair<Integer, Integer>>> chunksHash;
+    // HashMap<hash, <ArrayLisy<ServerRecord>, <chunkNumber, totalNumberChunks>>>
+    HashMap<String, Pair<ArrayList<ServerRecord>, Pair<Integer, Integer>>> chunksHash;
 
-    /**
-     * Constructor for FileRecord
-     * @param fileName the name of the file associated to the FileRecord
-     */
     public FileRecord(String fileName) {
         this.fileName = fileName;
         this.chunksHash = new HashMap<>();
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
     @Override
@@ -41,13 +35,6 @@ public class FileRecord {
         return chunksHash;
     }
 
-    /**
-     * Add a chunk contains in a HDFS server to a {@link FileRecord}
-     * @param hash The hash of the chunk to add
-     * @param server The server where the new chunk is stored
-     * @param chunkNumber The chunk number in the file
-     * @param totalNumberChunk The total number of chunks of a file
-     */
     public void addChunkStoredInServer(String hash, ServerRecord server, int chunkNumber, int totalNumberChunk) {
         for (Map.Entry<String, Pair<ArrayList<ServerRecord>, Pair<Integer, Integer>>> p : chunksHash.entrySet()) {
             if (p.getKey().equals(hash)) {
@@ -65,10 +52,6 @@ public class FileRecord {
         chunksHash.put(hash, new Pair<>(srToStore, new Pair(chunkNumber, totalNumberChunk)));
     }
 
-    /**
-     * Handmade checker to check if all chunks of a file are registered to the Name Provider
-     * @return Yes if every chunk of the file is registered and false otherwise
-     */
     public boolean allChunksAreRegistered() {
         int somme = 0;
         boolean first = true;
@@ -83,6 +66,14 @@ public class FileRecord {
 
         int total = somePair.getRight().getRight();
 
+        System.out.println("checksum : " + somme + "\nTotal : " + total);
+
         return !this.chunksHash.isEmpty() && (total == 1 || somme == ((total-1)*total)/2);
+    }
+
+    public static void printFiles(HashMap<String, FileRecord> fileRecords) {
+        for (Map.Entry<String, FileRecord> p : fileRecords.entrySet()) {
+            System.out.println(p + "\n");
+        }
     }
 }

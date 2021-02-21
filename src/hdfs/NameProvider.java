@@ -8,38 +8,19 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * The Name Provider acts as a proxy between the client and the server. It stores various metadatas between the servers
- * and the chunks, to be able to provide useful informations to both the servers and the clients.
- * It is able to dynamically manage the servers and the clients.
- */
 public class NameProvider {
-    /**
-     * The port of the Name Provider
-     */
     public static final int NAME_PROVIDER_PORT = 5000;
 
-    /**
-     * The minimum port given to a server
-     */
     public static final int SERVER_PORT_MIN = 6000;
-
-    /**
-     * The maximum port given to a server
-     */
     public static final int SERVER_PORT_MAX = 7000;
 
-    private HashMap<String, FileRecord> files;
-    private ArrayList<ServerRecord> servers;
+    public HashMap<String, FileRecord> files;
+    ArrayList<ServerRecord> servers;
 
     private Registry registry;
     private ServerRegistry serverRegistry;
     private ClientRequest clientRequest;
 
-    /**
-     * Constructor for the Name Provider. It will automatically start it.
-     * @throws UnknownHostException
-     */
     public NameProvider() throws UnknownHostException {
         System.out.println("=== Name Provider Startup ===");
         System.out.println("Address : " + InetAddress.getLocalHost() +" | Port : " + NAME_PROVIDER_PORT);

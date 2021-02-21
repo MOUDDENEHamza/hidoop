@@ -2,11 +2,6 @@ package hdfs;
 
 import java.io.Serializable;
 
-/**
- * Manage the pair of two objects
- * @param <l> The type of the first object
- * @param <r> The type of the second object
- */
 public class Pair<l, r> implements Serializable {
     private l left;
     private r right;

@@ -1,11 +1,9 @@
 package hdfs;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-/**
- * describes a thread which should upload a chunk from the hdfs server
- */
 public class ThreadWriteChunks implements Runnable {
     private ServerRecord serverToWrite;
     private String fname;

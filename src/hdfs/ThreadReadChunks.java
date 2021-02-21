@@ -5,9 +5,6 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.util.concurrent.Callable;
 
-/**
- * describes a thread which should download a chunk from the hdfs server
- */
 public class ThreadReadChunks implements Callable<String> {
     String hashChunkToRead;
     String baseDir;

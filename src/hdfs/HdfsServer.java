@@ -2,6 +2,7 @@ package hdfs;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -20,9 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HdfsServer {
-    /**
-     * Name of the file containing the metadatas of a server
-     */
     public static final String metadataFileName = ".metadata.yaml";
 
     private Register nameProviderRegistry;
@@ -31,13 +29,7 @@ public class HdfsServer {
     private ServerRecord record;
     private Yaml yaml;
 
-    /**
-     * Constructor for the HDFS server
-     * @param nameProviderRegistry The registry of the Name Provider
-     * @param rootDataDirectory The root directory of the server
-     * @param serverName The name of the server
-     */
-    public HdfsServer (Register nameProviderRegistry, String rootDataDirectory, String serverName) {
+    public HdfsServer(Register nameProviderRegistry, String rootDataDirectory, String serverName) {
         this.nameProviderRegistry = nameProviderRegistry;
         this.storedChunk = new HashMap<>();
         this.dataDirectory = rootDataDirectory + "/" + serverName + "/";
@@ -67,9 +59,6 @@ public class HdfsServer {
         loadStoredChunks();
     }
 
-    /**
-     * Load the chunks stored in the metadata file
-     */
     public void loadStoredChunks() {
         System.out.print("Loading chunks... ");
         try {
@@ -89,9 +78,6 @@ public class HdfsServer {
         System.out.println("Done.");
     }
 
-    /**
-     * Save the chunks in RAM to the metadata file
-     */
     public void saveChunksMetadata() {
         try {
             FileWriter writer = new FileWriter(dataDirectory + metadataFileName);
@@ -101,15 +87,7 @@ public class HdfsServer {
         }
     }
 
-    /**
-     * Write a chunk from a client to a server
-     * @param client The socket communicating with the client
-     * @param ois The Object Input Stream connected with the client
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws ClassNotFoundException
-     */
-    public void writeToServer (Socket client, ObjectInputStream ois) throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
+    public void writeToServer(Socket client, ObjectInputStream ois) throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
         System.out.println("Writing started.");
 
         MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
@@ -128,7 +106,7 @@ public class HdfsServer {
 
         while (received + bufferSize <= chunkSize) {
             receivedLoop = bis.read(buffer);
-            fos.write(buffer,0, receivedLoop);
+            fos.write(buffer, 0, receivedLoop);
             sha256Digest.update(buffer, 0, receivedLoop);
             received += receivedLoop;
         }
@@ -159,13 +137,6 @@ public class HdfsServer {
         System.out.println("Writing ended successfully.");
     }
 
-    /**
-     * Read a file from the server to a client
-     * @param socket The socket communicating with the client
-     * @param ois The Object Input Stream connected with the client
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
     public void readFromServer(Socket socket, ObjectInputStream ois) throws IOException, ClassNotFoundException {
         System.out.println("Reading started.");
         String hashToSend = (String) ois.readObject();
@@ -211,9 +182,6 @@ public class HdfsServer {
         }
     }
 
-    /**
-     * Authenticate the server to the Name Provider
-     */
     public void serverAuthenticationToNameProvider() {
         try {
             boolean success = nameProviderRegistry.addServer(record);
@@ -226,11 +194,6 @@ public class HdfsServer {
         }
     }
 
-    /**
-     * Register a chunk to the Name Provider
-     * @param chunk The chunk to register
-     * @param hash The hash of the chunk to register
-     */
     public void serverRegisterChunkToNameProvider(ChunkMetadata chunk, String hash) {
         System.out.println("Registering chunk " + hash + " to the Name Provider.");
         try {
@@ -242,10 +205,6 @@ public class HdfsServer {
         System.out.println("Registration done.");
     }
 
-    /**
-     * Delete a chunk from the Name Provider
-     * @param hashToDelete The hash of the chunk to delete
-     */
     private void deleteChunkServer(String hashToDelete) {
         System.out.println("Deleting chunk " + hashToDelete + " from the server...");
         System.out.print("Deleting file from Name Provider...");
@@ -273,12 +232,9 @@ public class HdfsServer {
         System.out.println("File deleted.");
     }
 
-    /**
-     * Start the server
-     */
     public void start() {
         try {
-            System.out.println("Address : " + InetAddress.getLocalHost() +" | Port : " + this.record.getPort());
+            System.out.println("Address : " + InetAddress.getLocalHost() + " | Port : " + this.record.getPort());
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -303,7 +259,7 @@ public class HdfsServer {
                 ois = new ObjectInputStream(communicationSocket.getInputStream());
                 commandToExecute = (Command) ois.readObject();
 
-                switch(commandToExecute) {
+                switch (commandToExecute) {
                     case CMD_WRITE:
                         System.out.println("A request to write has been received.");
                         writeToServer(communicationSocket, ois);

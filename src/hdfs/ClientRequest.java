@@ -1,24 +1,16 @@
 package hdfs;
 
+import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Implementation for HDFS of the {@link Request} interface
- */
 public class ClientRequest extends UnicastRemoteObject implements Request {
     HashMap<String, FileRecord> files;
     ArrayList<ServerRecord> servers;
 
-    /**
-     * Main constructor of ClientRequest
-     * @param fr The files of the Name Provider
-     * @param s The servers registered to the Name Provider
-     * @throws RemoteException
-     */
     public ClientRequest(HashMap<String, FileRecord> fr, ArrayList<ServerRecord> s) throws RemoteException {
         files = fr;
         servers = s;
@@ -49,11 +41,6 @@ public class ClientRequest extends UnicastRemoteObject implements Request {
         return serversToWrite;
     }
 
-    /**
-     * Determine the best server to write a file in the HDFS filesystem
-     * @param servers A list of candidates
-     * @return
-     */
     private ServerRecord serverSelection(ArrayList<ServerRecord> servers) {
         if (servers.isEmpty()) {
             return null;
@@ -65,6 +52,7 @@ public class ClientRequest extends UnicastRemoteObject implements Request {
 
     @Override
     public ArrayList<Pair<Integer, Pair<String, ServerRecord>>> askReading(String fileName) {
+        System.out.println("check if the file is registered");
         if (files.containsKey(fileName)) {
             FileRecord toRead = files.get(fileName);
 
@@ -127,11 +115,6 @@ public class ClientRequest extends UnicastRemoteObject implements Request {
         return servers.size();
     }
 
-    /**
-     * Determine if the Name Provider contains a specific file
-     * @param fileName The name of the file to find
-     * @return true is the file is known by the Name Provider, and false otherwise
-     */
     public boolean containsFile(String fileName) {
         return files.containsKey(fileName);
     }
