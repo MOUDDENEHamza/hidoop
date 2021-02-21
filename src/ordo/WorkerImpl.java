@@ -51,16 +51,8 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
     @Override
     public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException, InterruptedException {
-    	// Open reader and writer
-        reader.open(Format.OpenMode.R);
-        writer.open(Format.OpenMode.W);
-
-        // Launch map
-        m.map(reader, writer);
-
-        // Close reader and writer
-        reader.close();
-        writer.close();
+    	Thread mapProcess = new Thread(new MapProcess(m, reader, writer, cb));
+        mapProcess.start();
     }
 
     /**

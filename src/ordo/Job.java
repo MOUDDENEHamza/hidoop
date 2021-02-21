@@ -27,7 +27,7 @@ public class Job implements JobInterface {
     private String inputFileName;                // The name of HDFS file
     private ArrayList<Worker> workers;           // List of workers
     private String mode;
-    String[] workersIp = {"147.127.133.77", "147.127.133.80"};
+    String[] workersIp = {"147.127.133.2", "147.127.133.80", "147.127.133.163", "147.127.133.222"};
 
     /**
      * Constructor of Job class
@@ -106,9 +106,11 @@ public class Job implements JobInterface {
                     registry2 = LocateRegistry.getRegistry(workersIp[i], 8000 + (i + 1));
                 }
                 workers.add((Worker) registry2.lookup("//localhost:" + (8000 + i + 1) + "/Worker" + (i + 1)));
-		Thread t = new Thread(new MapProcess(workers.get(i % nbChunks), mr, reader, writer, cb)); 		t.start();
+                workers.get(i).runMap(mr, reader, writer, cb);
                 fileNames[i] = inputFileName + "-chunk" + (i + 1);
             }
+
+            cb.getSemaphore().acquire();
 
             MergeFiles mf = new MergeFiles(fileNames);
             mf.mergeFiles(this.getInputFileName() + "-allChunks");

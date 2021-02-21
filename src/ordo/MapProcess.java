@@ -4,14 +4,12 @@ import formats.Format;
 import map.Mapper;
 
 public class MapProcess implements Runnable {
-	Worker w;
 	Mapper m;
 	Format reader;
 	Format writer;
 	CallBack cb;
 
-	public MapProcess(Worker w, Mapper m, Format reader, Format writer, CallBack cb) {
-		this.w = w;
+	public MapProcess(Mapper m, Format reader, Format writer, CallBack cb) {
 		this.m = m;
 		this.reader = reader;
 		this.writer = writer;
@@ -19,13 +17,19 @@ public class MapProcess implements Runnable {
 	}
 
 	public void run() {
-		try {
-			w.runMap(m, reader, writer, cb);
-			cb.taskDone();
-		} catch (Exception exception) {
-			exception.printStackTrace();
+		// Open reader and writer
+		reader.open(Format.OpenMode.R);
+		writer.open(Format.OpenMode.W);
 
-		}
+		// Launch map
+		m.map(reader, writer);
+
+		// Close reader and writer
+		reader.close();
+		writer.close();
+
+		// Report that the process has finished runMap task.
+		cb.runMapDone();
 	}
 
 }
