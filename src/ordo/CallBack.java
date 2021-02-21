@@ -25,7 +25,7 @@ public class CallBack implements Serializable {
      */
     public CallBack(int nbChunks) {
         this.semaphore = new Semaphore(0);
-        this.count = 1;
+        this.count = 0;
         this.nbChunks = nbChunks;
     }
 
