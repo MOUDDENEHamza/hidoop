@@ -35,14 +35,9 @@ public class CallBackImpl extends UnicastRemoteObject implements CallBack {
     @Override
     public void runMapDone() {
         try {
-            System.out.println("map done");
-            System.out.println(this.count + " " + this.nbChunks);
+            this.count++;
             if (this.count == this.nbChunks) {
-                System.out.println("map done : release");
                 this.getSemaphore().release();
-            } else {
-                System.out.println("map done : count++");
-                this.count++;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,8 +47,6 @@ public class CallBackImpl extends UnicastRemoteObject implements CallBack {
     @Override
     public void waitForFinished() {
         try {
-            System.out.println("wait map");
-            System.out.println(this.count + " " + this.nbChunks);
             this.getSemaphore().acquire();
         } catch (Exception e) {
             e.printStackTrace();
