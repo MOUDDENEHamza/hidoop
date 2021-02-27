@@ -1,32 +1,45 @@
 #!/bin/bash
 
-n7_computers=(iode.enseeiht.fr carbone.enseeiht.fr oxygene.enseeiht.fr sodium.enseeiht.fr neon.enseeiht.fr azote.enseeiht.fr fluor.enseeiht.fr yoda.enseeiht.fr solo.enseeiht.fr hmoudden@vador.enseeiht.fr hmoudden@dragon.enseeiht.fr hmoudden@aston.enseeiht.fr hmoudden@cyclope.enseeiht.fr hmoudden@fermat.enseeiht.fr)
+HOSTS=(
+  ader.enseeiht.fr iode.enseeiht.fr carbone.enseeiht.fr oxygene.enseeiht.fr sodium.enseeiht.fr neon.enseeiht.fr
+  azote.enseeiht.fr fluor.enseeiht.fr yoda.enseeiht.fr solo.enseeiht.fr vador.enseeiht.fr dragon.enseeiht.fr
+  aston.enseeiht.fr cyclope.enseeiht.fr fermat.enseeiht.fr luke.enseeiht.fr
+)
 
-run_remote_hdfs() {
-    terminator --title NameProvider -e 'ssh hmoudden@ader.enseeiht.fr "cd nosave/hadoop && make compile && java -cp src hdfs.NameProvider"; exec bash'
-    sleep 5
-    terminator --title server1 -e 'ssh hmoudden@boole.enseeiht.fr "cd nosave/hadoop && java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsServer server1 147.127.135.160"; exec bash'
+run_hdfs() {
+  terminator --title NameProvider -e "ssh $login@${HOSTS[0]} 'cd nosave/hadoop && make compile && java -cp src hdfs.NameProvider'; exec bash"
+  sleep 5
+  for ((i = 1; i <= $nb_servers; i++)); do
+    terminator --title Server"$i" -e "ssh $login@${HOSTS[$i]} 'cd nosave/hadoop && java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsServer server$i 147.127.135.160'; exec bash"
     sleep 2
-    terminator --title server2 -e 'ssh hmoudden@iode.enseeiht.fr "cd nosave/hadoop && java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsServer server2 147.127.135.160"; exec bash'
-    sleep 2
-    terminator --title server3 -e 'ssh hmoudden@dragon.enseeiht.fr "cd nosave/hadoop && java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsServer server3 147.127.135.160"; exec bash'
-    sleep 2
-    terminator --title server4 -e 'ssh hmoudden@aston.enseeiht.fr "cd nosave/hadoop && java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsServer server4 147.127.135.160"; exec bash'
+  done
 }
 
-run_remote_hidoop() {
-    terminator --title worker1 -e 'ssh hmoudden@minotaure.enseeiht.fr "cd nosave/hadoop && java -cp src ordo.WorkerImpl 8001 1"; exec bash'
+run_hidoop() {
+  for ((i = 1; i <= $nb_servers; i++)); do
+    terminator --title Worker"$i" -e "ssh $login@${HOSTS[$nb_servers + i]} 'cd nosave/hadoop && java -cp src ordo.WorkerImpl 800$i $i'; exec bash"
     sleep 2
-    terminator --title worker2 -e 'ssh hmoudden@sodium.enseeiht.fr "cd nosave/hadoop && java -cp src ordo.WorkerImpl 8002 2"; exec bash'
-    sleep 2
-    terminator --title worker3 -e 'ssh hmoudden@cyclope.enseeiht.fr "cd nosave/hadoop && java -cp src ordo.WorkerImpl 8003 3"; exec bash'
-    sleep 2
-    terminator --title worker4 -e 'ssh hmoudden@fermat.enseeiht.fr "cd nosave/hadoop && java -cp src ordo.WorkerImpl 8004 4"; exec bash'
-
-   sleep 5
-   terminator --title user -e 'ssh hmoudden@carbone.enseeiht.fr "cd nosave/hadoop && java -cp src application.MyMapReduce data/data.txt remote"; exec bash'
+  done
 }
 
-./clean.sh
-run_remote_hdfs
-run_remote_hidoop
+# Kill name provider process running
+ssh "$login@${HOSTS[0]}" "pkill java"
+clear
+
+# Get user login
+read -rp "Please type your login : " login
+echo
+
+# Get the number of servers
+echo "We have $(($((${#HOSTS[@]} - 2)) / 2)) servers, please choose at least 1 server and at most "
+echo "$(($((${#HOSTS[@]} - 2)) / 2)) servers."
+read -rp "Please type the number of servers : " nb_servers
+
+# Run the name provider and the servers
+run_hdfs
+
+# Run the workers
+run_hidoop
+
+# Run the application
+terminator --title User -e "ssh $login@${HOSTS[${#n7_computers[@]} - 1]} 'cd nosave/hadoop && ./user'; exec bash"

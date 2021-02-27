@@ -3,18 +3,26 @@ package ordo;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * Reminder called when the execution of map is done
+ *
+ * @author Hamza Mouddene
+ * @version 1.0
+ */
 public interface CallBack extends Remote {
 
     /**
      * When the task is done, we increment the counter then if the counter is equal to the number of available fragments
-     * it prevents that the process has finished.
-     * @throws RemoteException
+     * it prevents that the process has finished
+     *
+     * @throws RemoteException that may occur during the execution of a remote method call
      */
-    public void runMapDone() throws RemoteException;
+    void runMapDone() throws RemoteException;
 
     /**
+     * Wait all threads finishing map execution
      *
-     * @throws RemoteException
+     * @throws RemoteException that may occur during the execution of a remote method call
      */
-    public void waitForFinished() throws RemoteException;
+    void waitForFinished() throws RemoteException;
 }

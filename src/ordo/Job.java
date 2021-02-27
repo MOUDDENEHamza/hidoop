@@ -5,7 +5,6 @@ import map.MapReduce;
 import hdfs.*;
 
 import java.io.*;
-import java.util.concurrent.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
@@ -19,20 +18,18 @@ import java.util.*;
 public class Job implements JobInterface {
 
     /**
-     * Attributs of Job class
+     * Attributes of Job class
      */
     private Format.Type inputFormat;             // The format of the file in input
     private String inputFileName;                // The name of HDFS file
     private ArrayList<Worker> workers;           // List of workers
-    private String mode;
     String[] workersIp = {"147.127.133.2", "147.127.133.80", "147.127.133.163", "147.127.135.222"};
 
     /**
      * Constructor of Job class
      */
-    public Job(String mode) {
-        this.mode = mode;
-        this.workers = new ArrayList<Worker>();
+    public Job() {
+        this.workers = new ArrayList<>();
     }
 
     /**
@@ -64,23 +61,18 @@ public class Job implements JobInterface {
     }
 
     @Override
-    public void startJob(MapReduce mr) throws IOException, ExecutionException, InterruptedException {
+    public void startJob(MapReduce mr) {
         try {
             Registry registry1, registry2;
             Request nameProviderRequest;
             int nbChunks;
             Format reader, writer;
-            CallBackImpl[] callBacks;
 
             // Get number of chunks from name provider
-            if (this.mode.equals("local")) {
-                registry1 = LocateRegistry.getRegistry(NameProvider.NAME_PROVIDER_PORT);
-            } else {
-                registry1 = LocateRegistry.getRegistry("147.127.135.160", NameProvider.NAME_PROVIDER_PORT);
-            }
+            registry1 = LocateRegistry.getRegistry("147.127.135.160", NameProvider.NAME_PROVIDER_PORT);
             nameProviderRequest = (Request) registry1.lookup("//localhost:" + NameProvider.NAME_PROVIDER_PORT
                     + "/ClientRequest");
-            ArrayList<Pair<Integer, Pair<String, ServerRecord>>> readRequest = null;
+            ArrayList<Pair<Integer, Pair<String, ServerRecord>>> readRequest;
             readRequest = nameProviderRequest.askReading(this.getInputFileName());
             nbChunks = readRequest.size();
 
@@ -98,11 +90,7 @@ public class Job implements JobInterface {
                             + readRequest.get(i).getRight().getLeft());
                 }
                 writer = new KVFormat(inputFileName + "-chunk" + (i + 1));
-                if (this.mode.equals("local")) {
-                    registry2 = LocateRegistry.getRegistry(8000 + (i + 1));
-                } else {
-                    registry2 = LocateRegistry.getRegistry(workersIp[i], 8000 + (i + 1));
-                }
+                registry2 = LocateRegistry.getRegistry(workersIp[i], 8000 + (i + 1));
                 workers.add((Worker) registry2.lookup("//localhost:" + (8000 + i + 1) + "/Worker" + (i + 1)));
                 workers.get(i).runMap(mr, reader, writer, cb);
                 fileNames[i] = inputFileName + "-chunk" + (i + 1);
@@ -130,7 +118,6 @@ public class Job implements JobInterface {
             // Delete allChunks file
             File allChunksFile = new File(this.getInputFileName() + "-allChunks");
             allChunksFile.delete();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

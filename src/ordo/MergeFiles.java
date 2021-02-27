@@ -12,14 +12,12 @@ public class MergeFiles {
     protected File[] files;
 
     public MergeFiles(String[] filesName) {
-
         this.files = new File[filesName.length];
         for (int i = 0; i < filesName.length; i++) {
             files[i] = new File(filesName[i]);
             try {
                 files[i].createNewFile();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -48,13 +46,11 @@ public class MergeFiles {
                     out.write(aLine);
                     out.newLine();
                 }
-
                 in.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
         try {
             out.close();
         } catch (IOException e) {

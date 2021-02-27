@@ -1,11 +1,10 @@
 package ordo;
 
-import map.MapReduce;
 import formats.Format;
+import map.MapReduce;
 
-import java.io.*;
-import java.util.concurrent.*;
-import java.rmi.RemoteException;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Launch a parallel process

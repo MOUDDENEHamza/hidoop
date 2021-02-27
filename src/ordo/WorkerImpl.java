@@ -36,10 +36,10 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
         try {
             registry = LocateRegistry.getRegistry(WorkerImpl.port);
             registry.rebind(url, this);
-            System.out.println("Registry existant");
+            System.out.println("Registry existent");
         } catch (Exception e) {
             try {
-                System.out.println("Registry inexistant, create registry");
+                System.out.println("Registry nonexistent, create registry");
                 registry = LocateRegistry.createRegistry(WorkerImpl.port);
                 registry.rebind(url, this);
             } catch (Exception exception) {
@@ -49,7 +49,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     }
 
     @Override
-    public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException, InterruptedException {
+    public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
     	Thread t = new Thread(new MapProcess(m, reader, writer, cb));
         t.start();
     }
@@ -70,7 +70,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
             // Obtain the id of the worker
             Scanner id = new Scanner(System.in);
             System.out.print("Enter the worker id : ");
-            WorkerImpl.id = port.nextInt();
+            WorkerImpl.id = id.nextInt();
         } else if (args.length == 2) {
             WorkerImpl.port = Integer.parseInt(args[0]);
             WorkerImpl.id = Integer.parseInt(args[1]);
