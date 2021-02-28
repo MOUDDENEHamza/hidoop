@@ -22,13 +22,13 @@ run_hidoop() {
   done
 }
 
-# Kill name provider process running
-ssh "$login@${HOSTS[0]}" "pkill java"
-clear
-
 # Get user login
+clear
 read -rp "Please type your login : " login
 echo
+
+# Kill name provider process running
+ssh "$login@${HOSTS[0]}" "pkill java"
 
 # Get the number of servers
 echo "We have $(($((${#HOSTS[@]} - 2)) / 2)) servers, please choose at least 1 server and at most "
@@ -42,4 +42,4 @@ run_hdfs
 run_hidoop
 
 # Run the application
-terminator --title User -e "ssh $login@${HOSTS[${#n7_computers[@]} - 1]} 'cd nosave/hadoop && ./user'; exec bash"
+terminator --title User -e "ssh $login@${HOSTS[${#n7_computers[@]} - 1]} 'cd nosave/hadoop && ./user.sh'; exec bash"
