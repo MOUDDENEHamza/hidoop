@@ -119,12 +119,7 @@ public class HdfsClient {
             return;
         }
 
-        Collections.sort(readRequest, new Comparator<>() {
-            @Override
-            public int compare(Pair<Integer, Pair<String, ServerRecord>> t1, Pair<Integer, Pair<String, ServerRecord>> t2) {
-                return t1.getLeft() - t2.getLeft();
-            }
-        });
+        Collections.sort(readRequest, (t1, t2) -> t1.getLeft() - t2.getLeft());
 
         System.out.println("Done.");
 
