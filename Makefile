@@ -5,9 +5,9 @@ JAVA = java
 JAR = -cp "lib/snakeyaml-1.5.jar"
 CLASSPATH = -cp src
 FLAG = -Xlint:unchecked
-SRC = src/formats/*.java src/map/*.java src/hdfs/*.java src/ordo/*.java src/application/*.java
+SRC = src/formats/*.java src/map/*.java src/config/*.java src/hdfs/*.java src/ordo/*.java src/application/*.java
 READ = read -p
-CLASS = src/formats/*.class src/map/*.class src/hdfs/*.class src/ordo/*.class src/application/*.class
+CLASS = src/formats/*.class src/map/*.class src/config/*.class src/hdfs/*.class src/ordo/*.class src/application/*.class
 
 all :
 	$(MAKE) compile $(SILENT)

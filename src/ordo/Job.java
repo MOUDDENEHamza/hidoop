@@ -3,7 +3,7 @@ package ordo;
 import formats.*;
 import map.MapReduce;
 import hdfs.*;
-
+import static config.Hosts.*;
 import java.io.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -22,8 +22,7 @@ public class Job implements JobInterface {
      */
     private Format.Type inputFormat;             // The format of the file in input
     private String inputFileName;                // The name of HDFS file
-    private ArrayList<Worker> workers;           // List of workers
-    String[] workersIp = {"147.127.133.2", "147.127.133.80", "147.127.133.163", "147.127.135.222"};
+    private final ArrayList<Worker> workers;     // List of workers
 
     /**
      * Constructor of Job class
@@ -69,7 +68,7 @@ public class Job implements JobInterface {
             Format reader, writer;
 
             // Get number of chunks from name provider
-            registry1 = LocateRegistry.getRegistry("147.127.135.160", NameProvider.NAME_PROVIDER_PORT);
+            registry1 = LocateRegistry.getRegistry(nameProviderIP, NameProvider.NAME_PROVIDER_PORT);
             nameProviderRequest = (Request) registry1.lookup("//localhost:" + NameProvider.NAME_PROVIDER_PORT
                     + "/ClientRequest");
             ArrayList<Pair<Integer, Pair<String, ServerRecord>>> readRequest;
@@ -90,7 +89,7 @@ public class Job implements JobInterface {
                             + readRequest.get(i).getRight().getLeft());
                 }
                 writer = new KVFormat(inputFileName + "-chunk" + (i + 1));
-                registry2 = LocateRegistry.getRegistry(workersIp[i], 8000 + (i + 1));
+                registry2 = LocateRegistry.getRegistry(workersIP[i], 8000 + (i + 1));
                 workers.add((Worker) registry2.lookup("//localhost:" + (8000 + i + 1) + "/Worker" + (i + 1)));
                 workers.get(i).runMap(mr, reader, writer, cb);
                 fileNames[i] = inputFileName + "-chunk" + (i + 1);
