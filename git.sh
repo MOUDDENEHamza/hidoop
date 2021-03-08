@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Clean project
-make clean
-
 # Add the new files
 git add .
 
