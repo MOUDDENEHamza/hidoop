@@ -14,20 +14,27 @@ while true; do
   echo
   echo "To exit please type 0"
   echo "To write a text file to servers type 1"
-  echo "To run the application please type 2"
+  echo "To list the content of servers type 2"
+  echo "To delete file from servers type 3"
+  echo "To run the application please type 4"
   echo
   read -rp "Please type your choice : " choice
 
   # Handle the input if it is an integer
   if [[ $choice ]] && [ "$choice" -eq "$choice" ] 2>/dev/null; then
-    # To generate text file
+    # To generate text file and write it on servers
     if [[ $choice -eq 1 ]]; then
       cd data
       ./generate_data.sh
       cd ..
       java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsClient write line data/data.txt 147.127.135.160
-    # Run the application
+    # List servers data
     elif [[ $choice -eq 2 ]]; then
+      java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsClient list 147.127.135.160
+    # Delete file from servers
+    elif [[ $choice -eq 3 ]]; then
+      java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsClient delete data/data.txt 147.127.135.160
+    elif [[ $choice -eq 4 ]]; then
       sleep 5
       java -cp src application.MyMapReduce data/data.txt
     # Exit the script
@@ -37,7 +44,7 @@ while true; do
       break
     # if the choice is greater than 2 or lower than 0
     else
-      echo $'\e[31;1mERROR :\e[0m\eT Wrong input, please type 0, 1 or 2.'
+      echo $'\e[31;1mERROR :\e[0m\eT Wrong input, please type an integer between 0 and 4.'
       echo "Please try again"
     fi
   # Handle the input if it is not an integer

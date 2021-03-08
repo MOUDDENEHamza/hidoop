@@ -1,7 +1,0 @@
-AB68714D45353D23D64D6EAFA028ABFE78B9F9A3CAA91E420DE4B2A280855E07: !!hdfs.ChunkMetadata
-  baseByte: 3178
-  chunkNumber: 3
-  fileName: data/data.txt
-  sizeBytes: 918
-  totalChunkNumber: 4
-  type: LINE
