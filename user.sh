@@ -22,8 +22,10 @@ while true; do
   if [[ $choice ]] && [ "$choice" -eq "$choice" ] 2>/dev/null; then
     # To generate text file
     if [[ $choice -eq 1 ]]; then
-      ./data/generate_data.sh
-      make run_HdfsClient
+      cd data
+      ./generate_data.sh
+      cd ..
+      java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsClient write line data/data.txt 147.127.135.160
     # Run the application
     elif [[ $choice -eq 2 ]]; then
       sleep 5
