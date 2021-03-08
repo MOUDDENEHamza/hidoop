@@ -18,7 +18,8 @@ while true; do
   echo "To delete file from servers type 3"
   echo "To run the application please type 4"
   echo
-  read -p "Please type your choice : " choice
+  printf "Please type your choice : "
+  read choice
 
   # Handle the input if it is an integer
   if [[ $choice ]] && [ "$choice" -eq "$choice" ] 2>/dev/null; then
