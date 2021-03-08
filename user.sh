@@ -23,7 +23,7 @@ while true; do
     # To generate text file
     if [[ $choice -eq 1 ]]; then
       ./data/generate_data.sh
-      make run_HdfsClient line data/data.txt 147.127.135.160
+      make run_HdfsClient
     # Run the application
     elif [[ $choice -eq 2 ]]; then
       sleep 5
