@@ -2,7 +2,7 @@
 
 NAMEPROVIDER=( ader.enseeiht.fr)
 SERVERS=(
-        iode.enseeiht.fr carbone.enseeiht.fr oxygene.enseeiht.fr sodium.enseeiht.fr neon.enseeiht.fr
+        iode.enseeiht.fr carbone.enseeiht.fr minotaure.enseeiht.fr sodium.enseeiht.fr neon.enseeiht.fr
         azote.enseeiht.fr fluor.enseeiht.fr
         )
 WORKERS=(
@@ -11,6 +11,7 @@ WORKERS=(
         )
 USER=( luke.enseeiht.fr )
 
+BREAKDONW_WORKERS = { oxygene.enseeiht.fr }
 run_hdfs() {
   terminator --title NameProvider -e "ssh $login@${NAMEPROVIDER[0]} 'cd nosave/hadoop && make compile && java -cp src hdfs.NameProvider'; exec bash"
   sleep 5
