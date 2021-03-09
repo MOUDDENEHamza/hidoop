@@ -35,20 +35,25 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
      */
     public WorkerImpl(String url) throws RemoteException {
         try {
-            // Create the server
-            registry = LocateRegistry.createRegistry(WorkerImpl.port);
+            registry = LocateRegistry.getRegistry(WorkerImpl.port);
             registry.rebind(url, this);
-            // Create the heart beat emitter thread
-            this.threadEmitter = new ThreadEmitter();
-            this.threadEmitter.start();
+            System.out.println("Registry existent");
         } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                System.out.println("Registry nonexistent, create registry");
+                registry = LocateRegistry.createRegistry(WorkerImpl.port);
+                registry.rebind(url, this);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
+        this.threadEmitter = new ThreadEmitter();
+        this.threadEmitter.start();
     }
 
     @Override
     public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
-    	Thread t = new Thread(new ThreadMap(m, reader, writer, cb));
+        Thread t = new Thread(new ThreadMap(m, reader, writer, cb));
         t.start();
     }
 
@@ -64,7 +69,6 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
             Scanner port = new Scanner(System.in);
             System.out.print("Enter the worker port : ");
             WorkerImpl.port = port.nextInt();
-
             // Obtain the id of the worker
             Scanner id = new Scanner(System.in);
             System.out.print("Enter the worker id : ");
@@ -76,8 +80,8 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
             System.out.println("Usage : java WorkerImpl port id");
         }
 
-        System.out.println("Address : " + InetAddress.getLocalHost() +" | Port : " + WorkerImpl.port);
-        WorkerImpl.url = "//localhost:"+ WorkerImpl.port + "/Worker" + WorkerImpl.id;
+        System.out.println("Address : " + InetAddress.getLocalHost() + " | Port : " + WorkerImpl.port);
+        WorkerImpl.url = "//localhost:" + WorkerImpl.port + "/Worker" + WorkerImpl.id;
         System.out.println("url : " + WorkerImpl.url);
 
         // Create worker
