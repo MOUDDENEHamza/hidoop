@@ -24,7 +24,7 @@ public class Client {
         System.out.println("Host = "+ args[0] + "    Port = 8000");
         while (true) {
             System.out.println("Start connection with server");
-            client.startConnection(args[0], 8000);
+            client.startConnection("luke.enseeiht.fr", 8000);
             System.out.println("Send heart beat to server");
             out.println(args[0]);
             Thread.sleep(2000);
