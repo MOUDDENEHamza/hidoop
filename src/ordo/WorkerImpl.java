@@ -22,10 +22,11 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     /**
      * Attributes of WorkerImpl class
      */
-    static int port;            // The port of the worker
-    static int id;              // The Id of the worker
-    static String url;          // The url of the worker
+    static int port;                // The port of the worker
+    static int id;                  // The Id of the worker
+    static String url;              // The url of the worker
     Registry registry;
+    ThreadEmitter threadEmitter;    // The heart beat emitter
 
     /**
      * Constructor of WorkerImpl class that creates a worker
@@ -34,8 +35,12 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
      */
     public WorkerImpl(String url) throws RemoteException {
         try {
+            // Create the server
             registry = LocateRegistry.createRegistry(WorkerImpl.port);
             registry.rebind(url, this);
+            // Create the heart beat emitter thread
+            this.threadEmitter = new ThreadEmitter();
+            this.threadEmitter.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,7 +48,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
     @Override
     public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
-    	Thread t = new Thread(new MapProcess(m, reader, writer, cb));
+    	Thread t = new Thread(new ThreadMap(m, reader, writer, cb));
         t.start();
     }
 

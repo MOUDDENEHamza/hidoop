@@ -5,13 +5,13 @@ import map.Mapper;
 
 import java.rmi.RemoteException;
 
-public class MapProcess implements Runnable {
+public class ThreadMap implements Runnable {
     Mapper m;
     Format reader;
     Format writer;
     CallBack cb;
 
-    public MapProcess(Mapper m, Format reader, Format writer, CallBack cb) {
+    public ThreadMap(Mapper m, Format reader, Format writer, CallBack cb) {
         this.m = m;
         this.reader = reader;
         this.writer = writer;
