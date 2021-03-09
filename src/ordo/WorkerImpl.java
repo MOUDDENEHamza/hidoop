@@ -34,17 +34,10 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
      */
     public WorkerImpl(String url) throws RemoteException {
         try {
-            registry = LocateRegistry.getRegistry(WorkerImpl.port);
+            registry = LocateRegistry.createRegistry(WorkerImpl.port);
             registry.rebind(url, this);
-            System.out.println("Registry existent");
         } catch (Exception e) {
-            try {
-                System.out.println("Registry nonexistent, create registry");
-                registry = LocateRegistry.createRegistry(WorkerImpl.port);
-                registry.rebind(url, this);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 
