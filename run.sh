@@ -5,6 +5,7 @@ SERVERS=(
         iode.enseeiht.fr carbone.enseeiht.fr minotaure.enseeiht.fr sodium.enseeiht.fr neon.enseeiht.fr
         azote.enseeiht.fr fluor.enseeiht.fr
         )
+SENSOR=( ablette.enseeiht.fr )
 WORKERS=(
         succube.enseeiht.fr hippogriffe.enseeiht.fr manticore.enseeiht.fr dragon.enseeiht.fr
         aston.enseeiht.fr cyclope.enseeiht.fr fermat.enseeiht.fr
@@ -23,6 +24,7 @@ run_hdfs() {
 }
 
 run_hidoop() {
+  terminator --title Sensor -e "ssh $login@${SENSOR[0]} 'cd nosave/hadoop && make sensor'; exec bash"
   for ((i = 0; i < "$nb_servers"; i++)); do
     terminator --title Worker"$(("$i" + 1))" -e "ssh $login@${WORKERS[$i]} 'cd nosave/hadoop && java -cp src ordo.WorkerImpl 800$(("$i" + 1)) $(("$i" + 1))'; exec bash"
     sleep 2

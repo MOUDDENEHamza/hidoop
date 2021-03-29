@@ -1,5 +1,7 @@
 package config;
 
+import java.util.ArrayList;
+
 /**
  * This class will store the ip addresses of the hosts.
  *
@@ -16,5 +18,6 @@ public final class Hosts {
             "succube.enseeiht.fr", "hippogriffe.enseeiht.fr", "manticore.enseeiht.fr", "dragon.enseeiht.fr",
             "aston.enseeiht.fr", "cyclope.enseeiht.fr", "fermat.enseeiht.fr"
     };
+    public static ArrayList<String> workersON = new ArrayList<>();
 
 }

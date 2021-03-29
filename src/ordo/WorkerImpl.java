@@ -3,12 +3,13 @@ package ordo;
 import formats.Format;
 import map.Mapper;
 
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Scanner;
 import java.rmi.RemoteException;
-import java.rmi.registry.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Scanner;
 
 /**
  * Realizes Worker interface that launch the demon on each machine using RMI to communicate between the client and the
@@ -25,8 +26,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     static int port;                // The port of the worker
     static int id;                  // The Id of the worker
     static String url;              // The url of the worker
-    Registry registry;
-    ThreadEmitter threadEmitter;    // The heart beat emitter
+    Registry registry;              //
 
     /**
      * Constructor of WorkerImpl class that creates a worker
@@ -47,8 +47,6 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
                 exception.printStackTrace();
             }
         }
-        this.threadEmitter = new ThreadEmitter();
-        this.threadEmitter.start();
     }
 
     @Override
@@ -57,12 +55,17 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
         t.start();
     }
 
+    @Override
+    public String beat() throws RemoteException {
+        return "up";
+    }
+
     /**
      * The main method of WorkerImpl class
      *
      * @param args contain the command line
      */
-    public static void main(String[] args) throws RemoteException, UnknownHostException {
+    public static void main(String[] args) throws IOException {
         System.out.println("******************************Worker******************************\n");
         // Obtain the port of the worker
         if (args.length == 0) {

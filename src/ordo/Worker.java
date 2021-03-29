@@ -25,4 +25,11 @@ public interface Worker extends Remote {
      */
     void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException, InterruptedException;
 
+    /**
+     * Send a heartbeat to a remote machine
+     *
+     * @return the state of the worker
+     * @throws RemoteException that may occur during the execution of a remote method call
+     */
+    String beat() throws RemoteException;
 }

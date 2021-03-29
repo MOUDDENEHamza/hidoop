@@ -15,19 +15,22 @@ all :
 compile :
 	$(JAVAC) $(JAR) $(SRC)
 
-run_worker :
+sensor :
+	$(JAVA) $(CLASSPATH) ordo.HeartBeatSensor
+
+worker :
 	$(JAVA) $(CLASSPATH) ordo.WorkerImpl
 
-run_NameProvider :
+nameProvider :
 	$(JAVA) $(CLASSPATH) hdfs.NameProvider
 
-run_HdfsServer :
+server :
 	@$(READ) "Enter the server name : " ServerName; \
 	$(JAVA) $(CLASSPATH):lib/snakeyaml-1.5.jar hdfs.HdfsServer $$ServerName
 
-run_HdfsClient :
+client :
 	@$(READ) "args : " args; \
-        $(JAVA) $(CLASSPATH):lib/snakeyaml-1.5.jar hdfs.HdfsClient $$args
+    $(JAVA) $(CLASSPATH):lib/snakeyaml-1.5.jar hdfs.HdfsClient $$args
 
 clean :
 	rm $(CLASS)
