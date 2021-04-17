@@ -91,7 +91,6 @@ public class Job implements JobInterface {
                 writer = new KVFormat(inputFileName + "-chunk" + (i + 1));
                 registry2 = LocateRegistry.getRegistry(workersIP[i], 8000 + (i + 1));
                 workers.add((Worker) registry2.lookup("//localhost:" + (8000 + i + 1) + "/Worker" + (i + 1)));
-                config.Hosts.workersON.add(workersIP[i]);
                 workers.get(i).runMap(mr, reader, writer, cb);
                 fileNames[i] = inputFileName + "-chunk" + (i + 1);
             }

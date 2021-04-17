@@ -24,11 +24,11 @@ run_hdfs() {
 }
 
 run_hidoop() {
-  terminator --title Sensor -e "ssh $login@${SENSOR[0]} 'cd nosave/hadoop && make sensor'; exec bash"
   for ((i = 0; i < "$nb_servers"; i++)); do
     terminator --title Worker"$(("$i" + 1))" -e "ssh $login@${WORKERS[$i]} 'cd nosave/hadoop && java -cp src ordo.WorkerImpl 800$(("$i" + 1)) $(("$i" + 1))'; exec bash"
     sleep 2
   done
+  terminator --title Sensor -e "ssh $login@${SENSOR[0]} 'cd nosave/hadoop && make sensor'; exec bash"
 }
 
 # Greeting message
