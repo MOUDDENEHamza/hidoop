@@ -39,7 +39,7 @@ public class HeartBeatSensor {
                         System.out.println("Worker on port " + (8000 + i + 1) + " down.");
                         System.out.println("Reboot worker on port " + (8000 + i + 1) + ".");
                         Runtime.getRuntime().exec("ssh hmoudden@" + Hosts.workersIP[i] + ".enseeiht.fr 'cd " +
-                                "nosave/hadoop && java -cp src ordo.WorkerImpl 800$((\"$i\" + 1)) $((\"$i\" + 1))'");
+                                "nosave/hadoop && ls'");
                     }
                     Thread.sleep(2000);
                 }
