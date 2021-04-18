@@ -12,6 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
 import static config.Hosts.workersIP;
+import static config.Hosts.workersON;
 
 /**
  * Realizes Worker interface that launch the demon on each machine using RMI to communicate between the client and the
@@ -92,6 +93,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
         // Create worker
         new WorkerImpl(WorkerImpl.url);
         config.Hosts.workersON.add(InetAddress.getLocalHost().toString());
+        System.out.println(workersON.toString());
     }
 
 }
