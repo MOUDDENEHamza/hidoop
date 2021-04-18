@@ -62,7 +62,7 @@ run_hdfs
 run_hidoop
 
 # Run the heartbeat sensor
-terminator --title Sensor -e "'make compile && java -cp src ordo.HeartBeatSensor $nb_servers'; exec bash"
+terminator --title Sensor -e "make compile && java -cp src ordo.HeartBeatSensor $nb_servers; exec bash"
 
 # Run the application
 terminator --title User -e "ssh $login@${USER[0]} 'cd nosave/hadoop && ./user.sh'; exec bash"
