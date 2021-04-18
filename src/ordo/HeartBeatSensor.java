@@ -41,19 +41,9 @@ public class HeartBeatSensor {
                 output.append(line).append("\n");
             }*/
 
-            System.out.println("2");
-            int exitVal = process.waitFor();
-            System.out.println("3");
-            if (exitVal == 0) {
-                System.out.println("Success!");
-                //System.out.println(output);
-                System.exit(0);
-            } else {
-                //abnormal...
-                System.out.println("Failed!");
-            }
 
-        } catch (IOException | InterruptedException e) {
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
