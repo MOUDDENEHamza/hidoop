@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static config.Hosts.workersIP;
@@ -30,6 +31,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     static int id;                  // The Id of the worker
     static String url;              // The url of the worker
     Registry registry;              //
+    public static ArrayList<String> workersON = new ArrayList<>();
 
     /**
      * Constructor of WorkerImpl class that creates a worker
@@ -92,8 +94,8 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
         // Create worker
         new WorkerImpl(WorkerImpl.url);
-        config.Hosts.workersON.add(InetAddress.getLocalHost().toString());
-        System.out.println(workersON.toString());
+        WorkerImpl.workersON.add(InetAddress.getLocalHost().toString());
+        System.out.println(WorkerImpl.workersON.toString());
     }
 
 }
