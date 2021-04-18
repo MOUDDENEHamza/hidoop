@@ -20,12 +20,39 @@ import java.util.ArrayList;
 public class HeartBeatSensor {
 
     public static void execCmd(String cmd) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder();
+        try {
 
-        // -- Linux --
+            // -- Linux --
 
-        // Run a shell command
-        processBuilder.command("bash", "-c", "java -cp src ordo.WorkerImpl 8001 1 &");
+            // Run a shell command
+            Process process = Runtime.getRuntime().exec("./relaunch.sh");
+
+            // Run a shell script
+            // Process process = Runtime.getRuntime().exec("path/to/hello.sh");
+
+            StringBuilder output = new StringBuilder();
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+
+            int exitVal = process.waitFor();
+            if (exitVal == 0) {
+                System.out.println("Success!");
+                System.out.println(output);
+                System.exit(0);
+            } else {
+                //abnormal...
+                System.out.println("Failed!");
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
