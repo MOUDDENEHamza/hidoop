@@ -23,18 +23,19 @@ public class HeartBeatSensor {
         try {
             while (true) {
                 Registry registry;
-                System.out.println(WorkerImpl.workersON.toString());
-                for (int i = 0; i <= WorkerImpl.workersON.size(); i++) {
+                WorkerImpl worker = new WorkerImpl();
+                System.out.println(worker.workersON.toString());
+                for (int i = 0; i <= worker.workersON.size(); i++) {
                     try {
-                        registry = LocateRegistry.getRegistry(WorkerImpl.workersON.get(i), 8000 + i + 1);
-                        Worker server = (Worker) registry.lookup("//" + WorkerImpl.workersON.get(i) + ":" + (8000 + i + 1) + "/Worker" + (i + 1));
+                        registry = LocateRegistry.getRegistry(worker.workersON.get(i), 8000 + i + 1);
+                        Worker server = (Worker) registry.lookup("//" + worker.workersON.get(i) + ":" + (8000 + i + 1) + "/Worker" + (i + 1));
                         if (server.beat().equals("up")) {
                             System.out.println("Worker on port " + (8000 + i + 1) + " up.");
                         }
                     } catch (ConnectException exception) {
                         System.out.println("Worker on port " + (8000 + i + 1) + " down.");
                         System.out.println("Reboot worker on port " + (8000 + i + 1) + ".");
-                        new WorkerImpl("//" + WorkerImpl.workersON.get(i) + ":" + (8000 + i + 1) + "/Worker" + (i + 1));
+                        new WorkerImpl("//" + worker.workersON.get(i) + ":" + (8000 + i + 1) + "/Worker" + (i + 1));
                     }
                     Thread.sleep(2000);
                 }

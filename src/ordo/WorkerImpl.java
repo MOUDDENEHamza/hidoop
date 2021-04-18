@@ -1,10 +1,12 @@
 package ordo;
 
+import config.Hosts;
 import formats.Format;
 import map.Mapper;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -28,14 +30,14 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     static int id;                  // The Id of the worker
     static String url;              // The url of the worker
     Registry registry;              //
-    public static ArrayList<String> workersON = new ArrayList<>();
+    public volatile ArrayList<String> workersON = new ArrayList<>();
 
     /**
      * Constructor of WorkerImpl class that creates a worker
      *
      * @throws RemoteException that may occur during the execution of a remote method call
      */
-    public WorkerImpl(String url) throws RemoteException {
+    public WorkerImpl(String url) throws RemoteException, UnknownHostException {
         try {
             registry = LocateRegistry.getRegistry(WorkerImpl.port);
             registry.rebind(url, this);
@@ -49,6 +51,11 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
                 exception.printStackTrace();
             }
         }
+        this.workersON.add(InetAddress.getLocalHost().toString());
+    }
+
+    public WorkerImpl() throws RemoteException {
+        super();
     }
 
     @Override
@@ -91,8 +98,6 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
         // Create worker
         new WorkerImpl(WorkerImpl.url);
-        WorkerImpl.workersON.add(InetAddress.getLocalHost().toString());
-        System.out.println(WorkerImpl.workersON.toString());
     }
 
 }
