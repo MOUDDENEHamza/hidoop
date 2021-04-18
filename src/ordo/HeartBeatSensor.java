@@ -23,6 +23,7 @@ public class HeartBeatSensor {
         try {
             while (true) {
                 Registry registry;
+                System.out.println(WorkerImpl.workersON.toString());
                 for (int i = 0; i <= WorkerImpl.workersON.size(); i++) {
                     try {
                         registry = LocateRegistry.getRegistry(WorkerImpl.workersON.get(i), 8000 + i + 1);
