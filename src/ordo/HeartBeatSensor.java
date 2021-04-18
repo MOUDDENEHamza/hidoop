@@ -58,7 +58,8 @@ public class HeartBeatSensor {
                 System.out.println(output);
                 System.exit(0);
             } else {
-                //abnormal...
+                System.out.println("Failed!");
+                System.out.println(output);
             }
 
         } catch (IOException e) {
