@@ -1,6 +1,5 @@
 package ordo;
 
-import config.Hosts;
 import formats.Format;
 import map.Mapper;
 
@@ -11,7 +10,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -30,7 +28,6 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     static int id;                  // The Id of the worker
     static String url;              // The url of the worker
     Registry registry;              //
-    public volatile ArrayList<String> workersON = new ArrayList<>();
 
     /**
      * Constructor of WorkerImpl class that creates a worker
@@ -51,11 +48,6 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
                 exception.printStackTrace();
             }
         }
-        this.workersON.add(InetAddress.getLocalHost().toString());
-    }
-
-    public WorkerImpl() throws RemoteException {
-        super();
     }
 
     @Override
