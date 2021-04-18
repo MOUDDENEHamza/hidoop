@@ -50,7 +50,7 @@ public class HeartBeatSensor {
                 System.out.println(output);
                 System.exit(0);
             } else {
-                System.out.println("Failed!");
+                System.out.println("Failed!" + exitVal);
                 System.out.println(output);
             }
 
