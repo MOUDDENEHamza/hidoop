@@ -20,13 +20,51 @@ import java.util.ArrayList;
 public class HeartBeatSensor {
 
     public static void execCmd(String cmd) throws IOException, InterruptedException {
-        Runtime run = Runtime.getRuntime();
-        Process pr = run.exec(cmd);
-        pr.waitFor();
-        BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-        String line = "";
-        while ((line=buf.readLine())!=null) {
-            System.out.println(line);
+        ProcessBuilder processBuilder = new ProcessBuilder();
+
+        // -- Linux --
+
+        // Run a shell command
+        processBuilder.command("bash", "-c", cmd);
+
+        // Run a shell script
+        //processBuilder.command("path/to/hello.sh");
+
+        // -- Windows --
+
+        // Run a command
+        //processBuilder.command("cmd.exe", "/c", "dir C:\\Users\\mkyong");
+
+        // Run a bat file
+        //processBuilder.command("C:\\Users\\mkyong\\hello.bat");
+
+        try {
+
+            Process process = processBuilder.start();
+
+            StringBuilder output = new StringBuilder();
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line + "\n");
+            }
+
+            int exitVal = process.waitFor();
+            if (exitVal == 0) {
+                System.out.println("Success!");
+                System.out.println(output);
+                System.exit(0);
+            } else {
+                //abnormal...
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
