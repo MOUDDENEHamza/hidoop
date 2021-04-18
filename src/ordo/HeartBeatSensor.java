@@ -2,6 +2,9 @@ package ordo;
 
 import config.Hosts;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.ConnectException;
@@ -15,6 +18,17 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class HeartBeatSensor {
+
+    public static void execCmd(String cmd) throws IOException, InterruptedException {
+        Runtime run = Runtime.getRuntime();
+        Process pr = run.exec(cmd);
+        pr.waitFor();
+        BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+        String line = "";
+        while ((line=buf.readLine())!=null) {
+            System.out.println(line);
+        }
+    }
 
     /**
      * Main method of this class
@@ -38,7 +52,7 @@ public class HeartBeatSensor {
                     } catch (ConnectException exception) {
                         System.out.println("Worker on port " + (8000 + i + 1) + " down.");
                         System.out.println("Reboot worker on port " + (8000 + i + 1) + ".");
-                        Runtime.getRuntime().exec("./relaunch.sh " + Hosts.workersIP[i] + " " + i);
+                        execCmd("./relaunch.sh " + Hosts.workersIP[i] + " " + i);
                         System.out.println("Rebooting worker on port " + (8000 + i + 1) + " done with success.");
                     }
                     Thread.sleep(1000);
