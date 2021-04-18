@@ -25,8 +25,9 @@ public class HeartBeatSensor {
             // -- Linux --
 
             // Run a shell command
+            System.out.println("0");
             Process process = Runtime.getRuntime().exec("./relaunch.sh");
-
+            System.out.println("1");
             // Run a shell script
             // Process process = Runtime.getRuntime().exec("path/to/hello.sh");
 
@@ -40,7 +41,9 @@ public class HeartBeatSensor {
                 output.append(line).append("\n");
             }*/
 
+            System.out.println("2");
             int exitVal = process.waitFor();
+            System.out.println("3");
             if (exitVal == 0) {
                 System.out.println("Success!");
                 //System.out.println(output);
