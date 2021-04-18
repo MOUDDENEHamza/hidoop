@@ -25,10 +25,7 @@ public class HeartBeatSensor {
         // -- Linux --
 
         // Run a shell command
-        //processBuilder.command("bash", "-c", "ssh hmoudden@succube.enseeiht.fr/147.127.133.3 'cd nosave/hadoop && java -cp src ordo.WorkerImpl 8001 1'");
-
-        // Run a shell script
-        processBuilder.command("./relaunch.sh");
+        processBuilder.command("bash", "-c", "java -cp src ordo.WorkerImpl 8001 1 &");
     }
 
     /**
