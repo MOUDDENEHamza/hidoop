@@ -88,9 +88,10 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
         System.out.println("Address : " + InetAddress.getLocalHost() + " | Port : " + WorkerImpl.port);
         WorkerImpl.url = "//localhost:" + WorkerImpl.port + "/Worker" + WorkerImpl.id;
         System.out.println("url : " + WorkerImpl.url);
-        config.Hosts.workersON.add(workersIP[WorkerImpl.id - 1]);
+
         // Create worker
         new WorkerImpl(WorkerImpl.url);
+        config.Hosts.workersON.add(InetAddress.getLocalHost().toString());
     }
 
 }
