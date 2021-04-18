@@ -30,7 +30,7 @@ public class HeartBeatSensor {
             // Run a shell script
             // Process process = Runtime.getRuntime().exec("path/to/hello.sh");
 
-            StringBuilder output = new StringBuilder();
+            /**StringBuilder output = new StringBuilder();
 
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
@@ -38,12 +38,12 @@ public class HeartBeatSensor {
             String line;
             while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");
-            }
+            }*/
 
             int exitVal = process.waitFor();
             if (exitVal == 0) {
                 System.out.println("Success!");
-                System.out.println(output);
+                //System.out.println(output);
                 System.exit(0);
             } else {
                 //abnormal...
