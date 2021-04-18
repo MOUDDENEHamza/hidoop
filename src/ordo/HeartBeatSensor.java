@@ -39,6 +39,7 @@ public class HeartBeatSensor {
                         System.out.println("Worker on port " + (8000 + i + 1) + " down.");
                         System.out.println("Reboot worker on port " + (8000 + i + 1) + ".");
                         Runtime.getRuntime().exec("./relaunch.sh " + Hosts.workersIP[i] + " " + i);
+                        System.out.println("Rebooting worker on port " + (8000 + i + 1) + " done with success.");
                     }
                     Thread.sleep(1000);
                 }
