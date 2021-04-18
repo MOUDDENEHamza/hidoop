@@ -19,35 +19,6 @@ import java.util.ArrayList;
  */
 public class HeartBeatSensor {
 
-    public static void execCmd(String cmd) throws IOException, InterruptedException {
-        try {
-
-            // -- Linux --
-
-            // Run a shell command
-            System.out.println("0");
-            Process process = Runtime.getRuntime().exec("./relaunch.sh");
-            System.out.println("1");
-            // Run a shell script
-            // Process process = Runtime.getRuntime().exec("path/to/hello.sh");
-
-            /**StringBuilder output = new StringBuilder();
-
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }*/
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Main method of this class
      * @param args command line
@@ -70,7 +41,7 @@ public class HeartBeatSensor {
                     } catch (ConnectException exception) {
                         System.out.println("Worker on port " + (8000 + i + 1) + " down.");
                         System.out.println("Reboot worker on port " + (8000 + i + 1) + ".");
-                        execCmd("./relaunch.sh " + Hosts.workersIP[i] + " " + i);
+                        Runtime.getRuntime().exec("./relaunch.sh");
                         System.out.println("Rebooting worker on port " + (8000 + i + 1) + " done with success.");
                     }
                     Thread.sleep(1000);
