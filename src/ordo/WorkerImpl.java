@@ -12,9 +12,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static config.Hosts.workersIP;
-import static config.Hosts.workersON;
-
 /**
  * Realizes Worker interface that launch the demon on each machine using RMI to communicate between the client and the
  * demon
