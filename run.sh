@@ -28,7 +28,6 @@ run_hidoop() {
     terminator --title Worker"$(("$i" + 1))" -e "ssh $login@${WORKERS[$i]} 'cd nosave/hadoop && java -cp src ordo.WorkerImpl 800$(("$i" + 1)) $(("$i" + 1))'; exec bash"
     sleep 2
   done
-  terminator --title Sensor -e "ssh $login@${SENSOR[0]} 'cd nosave/hadoop && java -cp src ordo.HeartBeatSensor $nb_servers'; exec bash"
 }
 
 # Greeting message
@@ -61,6 +60,9 @@ run_hdfs
 
 # Run the workers
 run_hidoop
+
+# Run the heartbeat sensor
+terminator --title Sensor -e "'make compile && java -cp src ordo.HeartBeatSensor $nb_servers'; exec bash"
 
 # Run the application
 terminator --title User -e "ssh $login@${USER[0]} 'cd nosave/hadoop && ./user.sh'; exec bash"
