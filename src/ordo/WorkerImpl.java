@@ -28,6 +28,26 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     static int id;                  // The Id of the worker
     static String url;              // The url of the worker
     Registry registry;              //
+    private int flag;
+    private Mapper m;
+    public Format reader, writer;
+    public CallBack cb;
+
+    public Mapper getMapper() {
+        return this.m;
+    }
+
+    public Format getReader() {
+        return this.reader;
+    }
+
+    public Format getWriter() {
+        return this.writer;
+    }
+
+    public CallBack getCallBack() {
+        return this.cb;
+    }
 
     /**
      * Constructor of WorkerImpl class that creates a worker
@@ -36,6 +56,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
      */
     public WorkerImpl(String url) throws RemoteException, UnknownHostException {
         try {
+            this.flag = 1;
             registry = LocateRegistry.getRegistry(WorkerImpl.port);
             registry.rebind(url, this);
             System.out.println("Registry existent");
@@ -54,11 +75,20 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
         Thread t = new Thread(new ThreadMap(m, reader, writer, cb));
         t.start();
+        this.flag = 2;
+        this.m = m;
+        this.reader = reader;
+        this.writer = writer;
+        this.cb = cb;
     }
 
     @Override
     public String beat() throws RemoteException {
-        return "up";
+        if (this.flag == 1) {
+            return "up";
+        } else {
+            return "map";
+        }
     }
 
     /**

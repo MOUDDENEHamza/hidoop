@@ -32,4 +32,12 @@ public interface Worker extends Remote {
      * @throws RemoteException that may occur during the execution of a remote method call
      */
     String beat() throws RemoteException;
+
+    Mapper getMapper();
+
+    Format getReader();
+
+    Format getWriter();
+
+    CallBack getCallBack();
 }
