@@ -55,6 +55,7 @@ public class HeartBeatSensor {
                         System.out.println("Reboot worker on port " + (8000 + i + 1) + ".");
                         Runtime.getRuntime().exec("./relaunch.sh");
                         System.out.println("Rebooting worker on port " + (8000 + i + 1) + " done with success.");
+                        Thread.sleep(2000);
                         if (workersON[i] == 2) {
                             System.out.println("Restart map of worker running on port " + (8000 + i + 1) + ".");
                             registry2 = LocateRegistry.getRegistry(workersIP[i], 8000 + (i + 1));
