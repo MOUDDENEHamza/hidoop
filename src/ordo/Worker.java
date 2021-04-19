@@ -14,6 +14,14 @@ import formats.Format;
  */
 public interface Worker extends Remote {
 
+    Mapper getMapper();
+
+    Format getReader();
+
+    Format getWriter();
+
+    CallBack getCallBack();
+
     /**
      * Launch the demon on each machine using RMI to communicate between the client and the demon
      *
@@ -33,11 +41,4 @@ public interface Worker extends Remote {
      */
     String beat() throws RemoteException;
 
-    Mapper getMapper();
-
-    Format getReader();
-
-    Format getWriter();
-
-    CallBack getCallBack();
 }

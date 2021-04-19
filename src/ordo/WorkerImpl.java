@@ -33,22 +33,6 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     public Format reader, writer;
     public CallBack cb;
 
-    public Mapper getMapper() {
-        return this.m;
-    }
-
-    public Format getReader() {
-        return this.reader;
-    }
-
-    public Format getWriter() {
-        return this.writer;
-    }
-
-    public CallBack getCallBack() {
-        return this.cb;
-    }
-
     /**
      * Constructor of WorkerImpl class that creates a worker
      *
@@ -69,6 +53,26 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
                 exception.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public Mapper getMapper() {
+        return this.m;
+    }
+
+    @Override
+    public Format getReader() {
+        return this.reader;
+    }
+
+    @Override
+    public Format getWriter() {
+        return this.writer;
+    }
+
+    @Override
+    public CallBack getCallBack() {
+        return this.cb;
     }
 
     @Override
