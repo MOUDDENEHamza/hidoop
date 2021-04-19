@@ -14,13 +14,29 @@ import formats.Format;
  */
 public interface Worker extends Remote {
 
-    Mapper getMapper();
+    /**
+     * Get the mapper of map
+     * @return the mapper
+     */
+    Mapper getMapper() throws RemoteException;
 
-    Format getReader();
+    /**
+     * get the reader format of map
+     * @return the reader format
+     */
+    Format getReader() throws RemoteException;
 
-    Format getWriter();
+    /**
+     * Get the writer format of map
+     * @return the writer format
+     */
+    Format getWriter() throws RemoteException;
 
-    CallBack getCallBack();
+    /**
+     * Get the callback of map
+     * @return the callback
+     */
+    CallBack getCallBack() throws RemoteException;
 
     /**
      * Launch the demon on each machine using RMI to communicate between the client and the demon
