@@ -19,14 +19,12 @@ run_hdfs() {
   sleep 5
   for ((i = 0; i < "$nb_servers"; i++)); do
     terminator --title Server"$(("$i" + 1))" -e "ssh $login@${SERVERS[$i]} 'cd nosave/hadoop && java -cp src:lib/snakeyaml-1.5.jar hdfs.HdfsServer server$(("$i" + 1)) 147.127.135.160'; exec bash"
-    sleep 2
   done
 }
 
 run_hidoop() {
   for ((i = 0; i < "$nb_servers"; i++)); do
     terminator --title Worker"$(("$i" + 1))" -e "ssh $login@${WORKERS[$i]} 'cd nosave/hadoop && java -cp src ordo.WorkerImpl 800$(("$i" + 1)) $(("$i" + 1))'; exec bash"
-    sleep 2
   done
 }
 
