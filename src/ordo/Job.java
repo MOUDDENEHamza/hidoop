@@ -5,6 +5,7 @@ import map.MapReduce;
 import hdfs.*;
 import static config.Hosts.*;
 import java.io.*;
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -141,6 +142,20 @@ public class Job extends UnicastRemoteObject implements JobInterface {
     @Override
     public String beat() throws RemoteException {
         return "up";
+    }
+
+    /**
+     * The main method of WorkerImpl class
+     *
+     * @param args contain the command line
+     */
+    public static void main(String[] args) throws IOException {
+        System.out.println("***************************** Job *****************************\n");
+        System.out.println("Address : " + InetAddress.getLocalHost() + " | Port : 9999");
+        System.out.println("url : //localhost:9999/Job");
+
+        // Turn on job RMI server
+        new Job();
     }
 
 }

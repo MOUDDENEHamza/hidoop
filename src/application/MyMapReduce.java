@@ -1,5 +1,7 @@
 package application;
 
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -10,6 +12,7 @@ import formats.Format;
 import formats.FormatReader;
 import formats.FormatWriter;
 import formats.KV;
+import ordo.JobInterface;
 
 public class MyMapReduce implements MapReduce {
     private static final long serialVersionUID = 1L;
@@ -41,7 +44,8 @@ public class MyMapReduce implements MapReduce {
 
     public static void main(String args[]) {
         try {
-            Job j = new Job();
+            Registry registry = LocateRegistry.getRegistry("luke.enseeiht.fr", 9999);
+            JobInterface j = (JobInterface) registry.lookup("//localhost:9999/Job");
             j.setInputFormat(Format.Type.LINE);
             j.setInputFileName(args[0]);
             long t1 = System.currentTimeMillis();

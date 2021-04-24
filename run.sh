@@ -26,6 +26,7 @@ run_hidoop() {
   for ((i = 0; i < "$nb_servers"; i++)); do
     terminator --title Worker"$(("$i" + 1))" -e "ssh $login@${WORKERS[$i]} 'cd nosave/hadoop && java -cp src ordo.WorkerImpl 800$(("$i" + 1)) $(("$i" + 1))'; exec bash"
   done
+  terminator --title Job -e "ssh $login@${JOB[0]} 'cd nosave/hadoop && java -cp src ordo.Job'; exec bash"
 }
 
 # Greeting message
