@@ -98,8 +98,10 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
         } catch (NullPointerException e) {
             if (this.flag == 1) {
                 res = "up";
-            } else {
+            } else if (this.flag == 2) {
                 res = "map";
+            } else {
+                res = "error";
             }
         }
         return res;
