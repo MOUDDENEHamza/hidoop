@@ -90,15 +90,19 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
     @Override
     public String beat() throws RemoteException {
-        if (this.threadMap.flag == 3) {
-            return "done";
-        } else {
+        String res = null;
+        try {
+            if (this.threadMap.flag == 3) {
+                res = "done";
+            }
+        } catch (NullPointerException e) {
             if (this.flag == 1) {
-                return "up";
+                res = "up";
             } else {
-                return "map";
+                res = "map";
             }
         }
+        return res;
     }
 
     /**
