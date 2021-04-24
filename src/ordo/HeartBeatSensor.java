@@ -49,6 +49,9 @@ public class HeartBeatSensor {
                             writersON[i] = server.getWriter();
                             callBacksON[i] = server.getCallBack();
                             System.out.println("Worker on port " + (8000 + i + 1) + " is mapping.");
+                        } else {
+                            workersON[i] = 3;
+                            System.out.println("Worker on port " + (8000 + i + 1) + " done.");
                         }
                     } catch (ConnectException exception) {
                         System.out.println("Worker on port " + (8000 + i + 1) + " down.");
