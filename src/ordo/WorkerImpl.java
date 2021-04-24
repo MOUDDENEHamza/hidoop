@@ -90,7 +90,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
 
     @Override
     public String beat() throws RemoteException {
-        String res = null;
+        String res = "";
         try {
             if (this.threadMap.flag == 3) {
                 res = "done";
