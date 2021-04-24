@@ -76,22 +76,30 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     }
 
     @Override
-    public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
-        Thread t = new Thread(new ThreadMap(m, reader, writer, cb));
+    public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException, InterruptedException {
+        ThreadMap threadMap = new ThreadMap(m, reader, writer, cb);
+        Thread t = new Thread(threadMap);
         t.start();
         this.flag = 2;
         this.m = m;
         this.reader = reader;
         this.writer = writer;
         this.cb = cb;
+        while (threadMap.flag != 3) {
+            System.out.println(threadMap.flag);
+            Thread.sleep(2000);
+        }
+        this.flag = 3;
     }
 
     @Override
     public String beat() throws RemoteException {
         if (this.flag == 1) {
             return "up";
-        } else {
+        } else if (this.flag == 2) {
             return "map";
+        } else {
+            return "done";
         }
     }
 

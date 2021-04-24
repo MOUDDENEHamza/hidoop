@@ -10,12 +10,14 @@ public class ThreadMap implements Runnable {
     Format reader;
     Format writer;
     CallBack cb;
+    int flag;
 
     public ThreadMap(Mapper m, Format reader, Format writer, CallBack cb) {
         this.m = m;
         this.reader = reader;
         this.writer = writer;
         this.cb = cb;
+        this.flag = 2;
     }
 
     public void run() {
@@ -33,6 +35,7 @@ public class ThreadMap implements Runnable {
         // Report that the process has finished runMap task.
         try {
             cb.runMapDone();
+            this.flag = 3;
         } catch (RemoteException e) {
             e.printStackTrace();
         }
