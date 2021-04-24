@@ -30,7 +30,7 @@ public class HeartBeatSensor {
         Format[] readersON = new Format[nbWorkers];
         Format[] writersON = new Format[nbWorkers];
         CallBack[] callBacksON = new CallBack[nbWorkers];
-
+        State jobState = null;
         try {
             while (true) {
                 Registry registry1, registry2;
@@ -73,8 +73,27 @@ public class HeartBeatSensor {
                         registry2 = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
                         JobInterface job = (JobInterface) registry2.lookup("//localhost:9999/Job");
                         /** Check the state of job */
-                        if (job.beat().equals("up")) {
+                        if (job.beat() == State.UP) {
+                            jobState = State.UP;
                             System.out.println("Job on port 9999 up.");
+                        } else if (job.beat() == State.START_INITIALIZE) {
+                            jobState = State.START_INITIALIZE;
+                            System.out.println("Job on port 9999 start initialize.");
+                        } else if (job.beat() == State.END_INITIALIZE) {
+                            jobState = State.END_INITIALIZE;
+                            System.out.println("Job on port 9999 end initialize.");
+                        } else if (job.beat() == State.START_MAP) {
+                            jobState = State.START_MAP;
+                            System.out.println("Job on port 9999 start map.");
+                        } else if (job.beat() == State.END_MAP) {
+                            jobState = State.END_MAP;
+                            System.out.println("Job on port 9999 end map.");
+                        } else if (job.beat() == State.START_REDUCE) {
+                            jobState = State.START_REDUCE;
+                            System.out.println("Job on port 9999 start reduce.");
+                        } else if (job.beat() == State.END_REDUCE) {
+                            jobState = State.END_REDUCE;
+                            System.out.println("Job on port 9999 end reduce.");
                         }
                     } catch (ConnectException exception) {
                         System.out.println("Job on port 9999 down.");
@@ -82,6 +101,9 @@ public class HeartBeatSensor {
                         Runtime.getRuntime().exec("./relaunch_job.sh");
                         System.out.println("Rebooting worker on port 9999 done with success.");
                         Thread.sleep(2000);
+                        if (jobState != State.UP) {
+                            System.out.println("TODO");
+                        }
                     }
                     Thread.sleep(500);
                 }

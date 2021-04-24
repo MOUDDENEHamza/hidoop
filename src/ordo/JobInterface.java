@@ -43,6 +43,6 @@ public interface JobInterface extends Remote {
      * @return the state of job
      * @throws RemoteException that may occur during the execution of a remote method call
      */
-    String beat() throws RemoteException;
+    State beat() throws RemoteException;
 
 }
