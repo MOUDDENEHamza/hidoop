@@ -94,6 +94,8 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
         try {
             if (this.threadMap.flag == 3) {
                 res = "done";
+            } else {
+                res = "map";
             }
         } catch (NullPointerException e) {
             if (this.flag == 1) {

@@ -49,7 +49,7 @@ public class HeartBeatSensor {
                             writersON[i] = server.getWriter();
                             callBacksON[i] = server.getCallBack();
                             System.out.println("Worker on port " + (8000 + i + 1) + " is mapping.");
-                        } else {
+                        } else if (server.beat().equals("done")) {
                             workersON[i] = 3;
                             System.out.println("Worker on port " + (8000 + i + 1) + " done.");
                         }
