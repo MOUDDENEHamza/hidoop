@@ -33,13 +33,13 @@ public class Job extends UnicastRemoteObject implements JobInterface {
     public Job() throws RemoteException {
         Registry registry;
         try {
-            registry = LocateRegistry.getRegistry(WorkerImpl.port);
+            registry = LocateRegistry.getRegistry(9999);
             registry.rebind("//localhost:9999/Job", this);
             System.out.println("Registry existent");
         } catch (Exception e) {
             try {
                 System.out.println("Registry nonexistent, create registry");
-                registry = LocateRegistry.createRegistry(WorkerImpl.port);
+                registry = LocateRegistry.createRegistry(9999);
                 registry.rebind("//localhost:9999/Job", this);
             } catch (Exception exception) {
                 exception.printStackTrace();
