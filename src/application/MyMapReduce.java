@@ -44,7 +44,7 @@ public class MyMapReduce implements MapReduce {
 
     public static void main(String args[]) {
         try {
-            Registry registry = LocateRegistry.getRegistry("luke.enseeiht.fr", 9999);
+            Registry registry = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
             JobInterface j = (JobInterface) registry.lookup("//localhost:9999/Job");
             j.setInputFormat(Format.Type.LINE);
             j.setInputFileName(args[0]);

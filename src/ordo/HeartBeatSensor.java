@@ -69,7 +69,7 @@ public class HeartBeatSensor {
                         }
                     }
                     try {
-                        registry2 = LocateRegistry.getRegistry("luke.enseeiht.fr", 9999);
+                        registry2 = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
                         JobInterface job = (JobInterface) registry2.lookup("//localhost:9999/Job");
                         /** Check the state of job */
                         if (job.beat().equals("up")) {
