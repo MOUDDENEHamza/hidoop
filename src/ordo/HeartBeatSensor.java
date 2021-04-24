@@ -68,6 +68,7 @@ public class HeartBeatSensor {
                             w.runMap(mappersON[i], readersON[i], writersON[i], callBacksON[i]);
                         }
                     }
+                    Thread.sleep(500);
                     try {
                         registry2 = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
                         JobInterface job = (JobInterface) registry2.lookup("//localhost:9999/Job");
@@ -78,10 +79,11 @@ public class HeartBeatSensor {
                     } catch (ConnectException exception) {
                         System.out.println("Job on port 9999 down.");
                         System.out.println("Reboot job on port 9999.");
+                        Runtime.getRuntime().exec("./relaunch_job.sh");
                         System.out.println("Rebooting worker on port 9999 done with success.");
                         Thread.sleep(2000);
                     }
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 }
             }
         } catch (Exception e) {
