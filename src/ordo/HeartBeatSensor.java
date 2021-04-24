@@ -39,6 +39,8 @@ public class HeartBeatSensor {
                         registry1 = LocateRegistry.getRegistry(Hosts.workersIP[i], 8000 + i + 1);
                         Worker server = (Worker) registry1.lookup("//localhost:" + (8000 + i + 1) +
                                 "/Worker" + (i + 1));
+
+                        /** Check the state of workers */
                         if (server.beat().equals("up")) {
                             workersON[i] = 1;
                             System.out.println("Worker on port " + (8000 + i + 1) + " up.");
@@ -65,6 +67,19 @@ public class HeartBeatSensor {
                             Worker w = (Worker) registry2.lookup("//localhost:" + (8000 + i + 1) + "/Worker" + (i + 1));
                             w.runMap(mappersON[i], readersON[i], writersON[i], callBacksON[i]);
                         }
+                    }
+                    try {
+                        registry2 = LocateRegistry.getRegistry("luke.enseeiht.fr", 9999);
+                        JobInterface job = (JobInterface) registry2.lookup("//localhost:9999/Job");
+                        /** Check the state of job */
+                        if (job.beat().equals("up")) {
+                            System.out.println("Job on port 9999 up.");
+                        }
+                    } catch (ConnectException exception) {
+                        System.out.println("Job on port 9999 down.");
+                        System.out.println("Reboot job on port 9999.");
+                        System.out.println("Rebooting worker on port 9999 done with success.");
+                        Thread.sleep(2000);
                     }
                     Thread.sleep(1000);
                 }

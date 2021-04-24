@@ -5,8 +5,10 @@ import map.MapReduce;
 import hdfs.*;
 import static config.Hosts.*;
 import java.io.*;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 /**
@@ -15,7 +17,7 @@ import java.util.*;
  * @author Hamza Mouddene
  * @version 1.0
  */
-public class Job implements JobInterface {
+public class Job extends UnicastRemoteObject implements JobInterface {
 
     /**
      * Attributes of Job class
@@ -27,7 +29,21 @@ public class Job implements JobInterface {
     /**
      * Constructor of Job class
      */
-    public Job() {
+    public Job() throws RemoteException {
+        Registry registry;
+        try {
+            registry = LocateRegistry.getRegistry(WorkerImpl.port);
+            registry.rebind("//localhost:9999/Job", this);
+            System.out.println("Registry existent");
+        } catch (Exception e) {
+            try {
+                System.out.println("Registry nonexistent, create registry");
+                registry = LocateRegistry.createRegistry(WorkerImpl.port);
+                registry.rebind("//localhost:9999/Job", this);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
         this.workers = new ArrayList<>();
     }
 
@@ -120,6 +136,11 @@ public class Job implements JobInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String beat() throws RemoteException {
+        return "up";
     }
 
 }

@@ -5,7 +5,6 @@ import map.Mapper;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -39,7 +38,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
      *
      * @throws RemoteException that may occur during the execution of a remote method call
      */
-    public WorkerImpl(String url) throws RemoteException, UnknownHostException {
+    public WorkerImpl(String url) throws RemoteException {
         try {
             this.flag = 1;
             registry = LocateRegistry.getRegistry(WorkerImpl.port);
@@ -77,7 +76,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     }
 
     @Override
-    public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException, InterruptedException {
+    public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
         this.threadMap = new ThreadMap(m, reader, writer, cb);
         Thread t = new Thread(this.threadMap);
         t.start();
