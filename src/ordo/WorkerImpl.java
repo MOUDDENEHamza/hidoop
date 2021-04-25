@@ -51,7 +51,6 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
                 registry = LocateRegistry.createRegistry(WorkerImpl.port);
                 registry.rebind(url, this);
             } catch (Exception exception) {
-                System.out.println("HEY how are you");
                 exception.printStackTrace();
             }
         }

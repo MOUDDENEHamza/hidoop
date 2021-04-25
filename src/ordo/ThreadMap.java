@@ -37,6 +37,7 @@ public class ThreadMap implements Runnable {
             cb.runMapDone();
             this.flag = 3;
         } catch (RemoteException e) {
+            System.out.println("HEY how are you");
             e.printStackTrace();
         }
     }
