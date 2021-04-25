@@ -29,6 +29,7 @@ public class Job extends UnicastRemoteObject implements JobInterface {
     private final ArrayList<Worker> workers;     // List of workers
     private State state;                         // State of Job process
     String[] fileNames;                          // Contains the filename of each chunk
+    public MapReduce mr;
 
     /**
      * Constructor of Job class
@@ -81,9 +82,16 @@ public class Job extends UnicastRemoteObject implements JobInterface {
     }
 
     @Override
+    public MapReduce getMapReduce() throws RemoteException {
+        return this.mr;
+    }
+
+
+    @Override
     public void startJob(MapReduce mr) {
         try {
             /*********************************************** Initialize ***********************************************/
+            this.mr = mr;
             this.state = State.START_INITIALIZE;
             Registry registry1, registry2;
             Request nameProviderRequest;

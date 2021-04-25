@@ -30,6 +30,8 @@ public interface JobInterface extends Remote {
      */
     void setInputFileName(String FileName) throws RemoteException;
 
+    MapReduce getMapReduce() throws RemoteException;
+
     /**
      * Launch maps and workers on machines
      *

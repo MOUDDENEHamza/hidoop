@@ -2,6 +2,7 @@ package ordo;
 
 import config.Hosts;
 import formats.Format;
+import map.MapReduce;
 import map.Mapper;
 
 import java.rmi.ConnectException;
@@ -31,6 +32,7 @@ public class HeartBeatSensor {
         Format[] writersON = new Format[nbWorkers];
         CallBack[] callBacksON = new CallBack[nbWorkers];
         State jobState = null;
+        MapReduce mr = null;
         try {
             while (true) {
                 Registry registry1, registry2;
@@ -63,8 +65,8 @@ public class HeartBeatSensor {
                         Thread.sleep(2000);
                         if (workersON[i] == 2) {
                             System.out.println("Restart map of worker running on port " + (8000 + i + 1) + ".");
-                            registry2 = LocateRegistry.getRegistry(workersIP[i], 8000 + (i + 1));
-                            Worker w = (Worker) registry2.lookup("//localhost:" + (8000 + i + 1) + "/Worker" + (i + 1));
+                            registry1 = LocateRegistry.getRegistry(workersIP[i], 8000 + (i + 1));
+                            Worker w = (Worker) registry1.lookup("//localhost:" + (8000 + i + 1) + "/Worker" + (i + 1));
                             w.runMap(mappersON[i], readersON[i], writersON[i], callBacksON[i]);
                         }
                     }
@@ -78,6 +80,7 @@ public class HeartBeatSensor {
                             System.out.println("Job on port 9999 up.");
                         } else if (job.beat() == State.START_INITIALIZE) {
                             jobState = State.START_INITIALIZE;
+                            mr = job.getMapReduce();
                             System.out.println("Job on port 9999 start initialize.");
                         } else if (job.beat() == State.END_INITIALIZE) {
                             jobState = State.END_INITIALIZE;
@@ -102,7 +105,9 @@ public class HeartBeatSensor {
                         System.out.println("Rebooting worker on port 9999 done with success.");
                         Thread.sleep(2000);
                         if (jobState != State.UP) {
-                            System.out.println("TODO");
+                            registry2 = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
+                            JobInterface job = (JobInterface) registry2.lookup("//localhost:9999/Job");
+                            job.relaunchJob(mr);
                         }
                     }
                     Thread.sleep(500);
