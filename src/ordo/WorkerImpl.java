@@ -32,6 +32,7 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     public Format reader, writer;
     public CallBack cb;
     public ThreadMap threadMap;
+    private State state;
 
     /**
      * Constructor of WorkerImpl class that creates a worker
@@ -76,6 +77,16 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
     }
 
     @Override
+    public State getState() throws RemoteException {
+        return this.state;
+    }
+
+    @Override
+    public void setState(State state) throws RemoteException {
+        this.state = state;
+    }
+
+    @Override
     public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
         this.threadMap = new ThreadMap(m, reader, writer, cb);
         Thread t = new Thread(this.threadMap);
@@ -93,14 +104,18 @@ public class WorkerImpl extends UnicastRemoteObject implements Worker {
         try {
             if (this.threadMap.flag == 3) {
                 res = "done";
+                this.setState(State.END_MAP);
             } else {
                 res = "map";
+                this.setState(State.START_MAP);
             }
         } catch (NullPointerException e) {
             if (this.flag == 1) {
                 res = "up";
+                this.setState(State.UP);
             } else if (this.flag == 2) {
                 res = "map";
+                this.setState(State.START_MAP);
             } else {
                 res = "error";
             }

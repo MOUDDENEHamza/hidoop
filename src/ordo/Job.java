@@ -156,6 +156,7 @@ public class Job extends UnicastRemoteObject implements JobInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.state = State.UP;
     }
 
     @Override
@@ -193,7 +194,7 @@ public class Job extends UnicastRemoteObject implements JobInterface {
                 writer = new KVFormat(inputFileName + "-chunk" + (i + 1));
                 registry2 = LocateRegistry.getRegistry(workersIP[i], 8000 + (i + 1));
                 Worker worker = (Worker) registry2.lookup("//localhost:" + (8000 + i + 1) + "/Worker" + (i + 1));
-                if (!worker.beat().equals("done")) {
+                if (worker.getState() != State.END_MAP) {
                     workers.add(worker);
                     workers.get(i).runMap(mr, reader, writer, cb);
                 }
@@ -229,6 +230,7 @@ public class Job extends UnicastRemoteObject implements JobInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.state = State.UP;
     }
 
     @Override

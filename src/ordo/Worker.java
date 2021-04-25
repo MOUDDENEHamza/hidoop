@@ -38,6 +38,10 @@ public interface Worker extends Remote {
      */
     CallBack getCallBack() throws RemoteException;
 
+    State getState() throws RemoteException;
+
+    void setState(State state) throws RemoteException;
+
     /**
      * Launch the demon on each machine using RMI to communicate between the client and the demon
      *
