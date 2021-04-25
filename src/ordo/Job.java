@@ -231,13 +231,6 @@ public class Job extends UnicastRemoteObject implements JobInterface {
             e.printStackTrace();
         }
         this.state = State.UP;
-        this.workers.forEach((w) -> {
-            try {
-                w.setState(State.UP);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     @Override
