@@ -34,8 +34,25 @@ public interface JobInterface extends Remote {
      * Launch maps and workers on machines
      *
      * @param mr corresponding to MapReduce to run in parallel
+     * @throws IOException          Signals that an I/O exception of some sort has occurred.
+     * @throws ExecutionException   Exception thrown when attempting to retrieve the result of a task that aborted by
+     *                              throwing an exception.
+     * @throws InterruptedException Thrown when a thread is waiting, sleeping, or otherwise occupied, and the thread is
+     *                              interrupted, either before or during the activity.
      */
-    void startJob(MapReduce mr) throws IOException, ExecutionException, InterruptedException, RemoteException;
+    void startJob(MapReduce mr) throws IOException, ExecutionException, InterruptedException;
+
+    /**
+     * Relaunch job without relaunch the workers not impacted
+     *
+     * @param mr corresponding to MapReduce to run in parallel
+     * @throws IOException          Signals that an I/O exception of some sort has occurred.
+     * @throws ExecutionException   Exception thrown when attempting to retrieve the result of a task that aborted by
+     *                              throwing an exception.
+     * @throws InterruptedException Thrown when a thread is waiting, sleeping, or otherwise occupied, and the thread is
+     *                              interrupted, either before or during the activity.
+     */
+    void relaunchJob(MapReduce mr) throws IOException, ExecutionException, InterruptedException;
 
     /**
      * Send a heartbeat to a remote machine
