@@ -3,6 +3,7 @@ package ordo;
 import formats.Format;
 import map.Mapper;
 
+import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 
 public class ThreadMap implements Runnable {
@@ -21,24 +22,23 @@ public class ThreadMap implements Runnable {
     }
 
     public void run() {
-        // Open reader and writer
-        reader.open(Format.OpenMode.R);
-        writer.open(Format.OpenMode.W);
-
-        // Launch map
-        m.map(reader, writer);
-
-        // Close reader and writer
-        reader.close();
-        writer.close();
-
-        // Report that the process has finished runMap task.
         try {
+            // Open reader and writer
+            reader.open(Format.OpenMode.R);
+            writer.open(Format.OpenMode.W);
+
+            // Launch map
+            m.map(reader, writer);
+
+            // Close reader and writer
+            reader.close();
+            writer.close();
+
+            // Report that the process has finished runMap task.
             cb.runMapDone();
             this.flag = 3;
-        } catch (RemoteException e) {
-            System.out.println("HEY how are you");
-            e.printStackTrace();
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
         }
     }
 
