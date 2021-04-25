@@ -42,22 +42,6 @@ public class MyMapReduce implements MapReduce {
         for (String k : hm.keySet()) writer.write(new KV(k, hm.get(k).toString()));
     }
 
-    public static void relaunch(String fileName) {
-        try {
-            Registry registry = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
-            JobInterface j = (JobInterface) registry.lookup("//localhost:9999/Job");
-            j.setInputFormat(Format.Type.LINE);
-            j.setInputFileName(fileName);
-            long t1 = System.currentTimeMillis();
-            j.startJob(new MyMapReduce());
-            long t2 = System.currentTimeMillis();
-            System.out.println("time in ms =" + (t2 - t1));
-            System.exit(0);
-        } catch (Exception e) {
-            relaunch(fileName);
-        }
-    }
-
     public static void main(String args[]) {
         try {
             Registry registry = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
@@ -70,7 +54,7 @@ public class MyMapReduce implements MapReduce {
             System.out.println("time in ms =" + (t2 - t1));
             System.exit(0);
         } catch (Exception e) {
-            relaunch(args[0]);
+            e.printStackTrace();
         }
     }
 }
