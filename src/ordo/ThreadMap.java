@@ -37,8 +37,8 @@ public class ThreadMap implements Runnable {
             // Report that the process has finished runMap task.
             cb.runMapDone();
             this.flag = 3;
-        } catch (Exception e) {
-            Thread.currentThread().interrupt();
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 
