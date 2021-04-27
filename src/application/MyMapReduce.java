@@ -59,10 +59,16 @@ public class MyMapReduce implements MapReduce {
             System.exit(0);
         } catch (Exception e) {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
                 Registry registry = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
                 JobInterface j = (JobInterface) registry.lookup("//localhost:9999/Job");
+                j.setInputFormat(Format.Type.LINE);
+                j.setInputFileName(args[0]);
+                long t1 = System.currentTimeMillis();
                 j.relaunchJob(new MyMapReduce());
+                long t2 = System.currentTimeMillis();
+                System.out.println("time in ms =" + (t2 - t1));
+                System.exit(0);
             } catch (InterruptedException | NotBoundException | IOException | ExecutionException interruptedException) {
                 interruptedException.printStackTrace();
             }
