@@ -106,9 +106,13 @@ public class HeartBeatSensor {
                         Thread.sleep(2000);
                         System.out.println("test : " + (jobState != State.UP));
                         if (jobState != State.UP) {
+                            System.out.println("1");
                             registry2 = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
+                            System.out.println("2");
                             JobInterface job = (JobInterface) registry2.lookup("//localhost:9999/Job");
+                            System.out.println("3");
                             job.relaunchJob(mr);
+                            System.out.println("4");
                         }
                     }
                     Thread.sleep(500);
