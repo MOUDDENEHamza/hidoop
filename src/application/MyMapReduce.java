@@ -1,10 +1,14 @@
 package application;
 
+import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.ExecutionException;
 
 import map.MapReduce;
 import ordo.Job;
@@ -54,7 +58,15 @@ public class MyMapReduce implements MapReduce {
             System.out.println("time in ms =" + (t2 - t1));
             System.exit(0);
         } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                Thread.sleep(5000);
+                Registry registry = LocateRegistry.getRegistry("behemot.enseeiht.fr", 9999);
+                JobInterface j = (JobInterface) registry.lookup("//localhost:9999/Job");
+                j.relaunchJob(new MyMapReduce());
+            } catch (InterruptedException | NotBoundException | IOException | ExecutionException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+
         }
     }
 }
