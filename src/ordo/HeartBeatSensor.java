@@ -60,7 +60,7 @@ public class HeartBeatSensor {
                     } catch (ConnectException exception) {
                         System.out.println("Worker on port " + (8000 + i + 1) + " down.");
                         System.out.println("Reboot worker on port " + (8000 + i + 1) + ".");
-                        Runtime.getRuntime().exec("./relaunch_worker.sh");
+                        Runtime.getRuntime().exec("./relaunch_worker.sh " + workersIP[i] + " " + (i + 1));
                         System.out.println("Rebooting worker on port " + (8000 + i + 1) + " done with success.");
                         Thread.sleep(2000);
                         if (workersON[i] == 2) {

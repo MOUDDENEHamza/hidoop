@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ssh hmoudden@succube.enseeiht.fr "cd nosave/hadoop && java -cp src ordo.WorkerImpl 8001 1"
+ssh hmoudden@"$1" "cd nosave/hadoop && java -cp src ordo.WorkerImpl 800$2 $2"
