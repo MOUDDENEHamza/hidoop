@@ -3,9 +3,6 @@ package ordo;
 import formats.Format;
 import map.Mapper;
 
-import java.rmi.ConnectException;
-import java.rmi.RemoteException;
-
 public class ThreadMap implements Runnable {
     Mapper m;
     Format reader;
@@ -37,8 +34,8 @@ public class ThreadMap implements Runnable {
             // Report that the process has finished runMap task.
             cb.runMapDone();
             this.flag = 3;
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
         }
     }
 
