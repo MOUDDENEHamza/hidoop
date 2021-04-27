@@ -162,14 +162,16 @@ public class Job extends UnicastRemoteObject implements JobInterface {
     @Override
     public void relaunchJob(MapReduce mr) throws IOException, ExecutionException, InterruptedException {
         try {
+
             /*********************************************** Initialize ***********************************************/
+            System.out.println("Initialize ...");
             this.state = State.START_INITIALIZE;
             Registry registry1, registry2;
             Request nameProviderRequest;
             int nbChunks;
             Format reader, writer;
 
-            // Get number of chunks from name provider
+            System.out.println("Get number of chunks from name provider");
             registry1 = LocateRegistry.getRegistry(nameProviderIP, NameProvider.NAME_PROVIDER_PORT);
             nameProviderRequest = (Request) registry1.lookup("//localhost:" + NameProvider.NAME_PROVIDER_PORT
                     + "/ClientRequest");
@@ -182,6 +184,7 @@ public class Job extends UnicastRemoteObject implements JobInterface {
             this.fileNames = new String[nbChunks];
             this.state = State.END_INITIALIZE;
             /*************************************************** Map **************************************************/
+            System.out.println("Start map ...");
             this.state = State.START_MAP;
             for (int i = 0; i < nbChunks; i++) {
                 if (this.getInputFormat() == Format.Type.LINE) {
@@ -202,21 +205,22 @@ public class Job extends UnicastRemoteObject implements JobInterface {
             }
             cb.waitForFinished();
             this.state = State.END_MAP;
-
+            System.out.println("Map done with success");
             /************************************************* Reduce *************************************************/
+            System.out.println("Start reduce ...");
             this.state = State.START_REDUCE;
-            // Prepare the allChunks reader file for the reduce
+            System.out.println("Prepare the allChunks reader file for the reduce");
             MergeFiles mf = new MergeFiles(this.fileNames);
             mf.mergeFiles(this.getInputFileName() + "-allChunks");
             mf.deleteFiles();
 
-            // Open reader and writer
+            System.out.println("Open reader and writer");
             reader = new KVFormat(this.getInputFileName() + "-allChunks");
             writer = new KVFormat(this.getInputFileName() + "-res");
             reader.open(Format.OpenMode.R);
             writer.open(Format.OpenMode.W);
 
-            // Reduce
+            System.out.println("Reduce");
             mr.reduce(reader, writer);
 
             // Close reader and writer
@@ -227,10 +231,12 @@ public class Job extends UnicastRemoteObject implements JobInterface {
             File allChunksFile = new File(this.getInputFileName() + "-allChunks");
             allChunksFile.delete();
             this.state = State.END_REDUCE;
+            System.out.println("End reduce");
         } catch (Exception e) {
             e.printStackTrace();
         }
         this.state = State.UP;
+        System.out.println("END");
     }
 
     @Override
