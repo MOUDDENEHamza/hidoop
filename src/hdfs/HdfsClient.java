@@ -8,20 +8,31 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class HdfsClient {
     private static Registry registry;
     private static Request nameProviderRequests;
     public final static String BASE_DIR = "";
 
+    /**
+     * Print command usage
+     */
     private static void usage() {
-        System.out.println("Usage: java HdfsClient read <file>");
+        System.out.println("Usage: java HdfsClient read <file> <destination file>");
         System.out.println("Usage: java HdfsClient write <line|kv> <file>");
         System.out.println("Usage: java HdfsClient delete <file>");
+        System.out.println("Usage: java HdfsClient list");
         System.out.println("Optional: add the NameProvider address at the end of the command if it is not local.");
     }
 
+    /**
+     * Delete a file on the HDFS filesystem
+     * @param hdfsFname : name of the file on the HDFS filesystem.
+     */
     public static void HdfsDelete(String hdfsFname) {
         System.out.println("Asking hashes to delete to the Name Provider.");
         HashMap<String, ArrayList<ServerRecord>> toDelete = null;
@@ -60,8 +71,19 @@ public class HdfsClient {
         System.out.println("Delete ended successfully.");
     }
 
+    /**
+     * Write a file on the HDFS filesystem
+     * @param fmt format of the file to wite on the HDFS filesystem.
+     * @param localFSSourceFname path of the file on the disk
+     * @param repFactor Factor of replication of the file on the HDFS filesystem. It is useless at the moment (set to 1).
+     * @throws IOException
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public static void HdfsWrite(Format.Type fmt, String localFSSourceFname, int repFactor) throws IOException, ExecutionException, InterruptedException {
-        ArrayList<ChunkMetadata> chunksMetadata = null;
+    	
+    	ArrayList<ChunkMetadata> chunksMetadata;
+        chunksMetadata = null;
         ArrayList<ServerRecord> servers = null;
 
 
@@ -90,11 +112,13 @@ public class HdfsClient {
         ArrayList<Future<?>> threadList = new ArrayList<>();
 
         System.out.print("Starting upload... ");
-
-        // Adding tasks to the thead pool
-        for (int i = 0; i < chunksMetadata.size(); ++i) {
-            threadList.add(threadPool.submit(new ThreadWriteChunks(chunksMetadata.get(i), crumbSize, servers.get(i))));
-        }
+        int nb_chunks = chunksMetadata.size();
+        // Adding tasks to the thread pool
+        for (int rep = 0; rep < repFactor; ++rep) { //Ajout du facteur de replication
+            for (int i = 0; i < nb_chunks; ++i) {
+                threadList.add(threadPool.submit(new ThreadWriteChunks(chunksMetadata.get(i), crumbSize, servers.get((i+rep) % nb_chunks))));
+            }
+    	}
         System.out.println("Upload started.");
 
         // Waiting every thread to finish
@@ -107,7 +131,14 @@ public class HdfsClient {
         System.out.println("Write ended successfully.");
     }
 
-
+    /**
+     * Read a file from the HDFS filesystem
+     * @param hdfsFname Name of the file on the HDFS filesystem. The path of the file must be included.
+     * @param localFSDestFname Path to write the file on the local filesystem.
+     * @throws IOException
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public static void HdfsRead(String hdfsFname, String localFSDestFname) throws IOException, ExecutionException, InterruptedException {
         System.out.println("Reading started");
         ArrayList<Pair<Integer, Pair<String, ServerRecord>>> readRequest = null;
@@ -119,7 +150,12 @@ public class HdfsClient {
             return;
         }
 
-        Collections.sort(readRequest, (t1, t2) -> t1.getLeft() - t2.getLeft());
+        Collections.sort(readRequest, new Comparator<>() {
+            @Override
+            public int compare(Pair<Integer, Pair<String, ServerRecord>> t1, Pair<Integer, Pair<String, ServerRecord>> t2) {
+                return t1.getLeft() - t2.getLeft();
+            }
+        });
 
         System.out.println("Done.");
 
@@ -169,6 +205,9 @@ public class HdfsClient {
         System.out.println("Reading ended successfully");
     }
 
+    /**
+     * List available files on the HDFS filesystem.
+     */
     public static void HdfsList() {
         try {
             System.out.println("=== Hdfs List ===");
@@ -182,22 +221,20 @@ public class HdfsClient {
     public static void main(String[] args) {
         // java HdfsClient <read|write> <line|kv> <file>
         try {
-            System.out.println(args.length + " " + args[0] + " " + args[1]);
-	    if (args.length < 1) {
-                System.out.println("args = " + args.length);
+            if (args.length < 1) {
                 usage();
                 return;
             }
-	    
+
             if ((args[0].equals("write") || args[0].equals("read")) && args.length > 3) {
                 registry = LocateRegistry.getRegistry(args[3], NameProvider.NAME_PROVIDER_PORT);
             } else if (!(args[0].equals("write") || args[0].equals("read")) && args.length > 2) {
                 registry = LocateRegistry.getRegistry(args[2], NameProvider.NAME_PROVIDER_PORT);
-            } else if (args.length == 2 && args[0].equals("list")) {
-		registry = LocateRegistry.getRegistry(args[1], NameProvider.NAME_PROVIDER_PORT);
-	    } else {
+            } else if (args[0].equals("list") && args.length > 1) {
+                registry = LocateRegistry.getRegistry(args[1], NameProvider.NAME_PROVIDER_PORT);
+            } else {
                 registry = LocateRegistry.getRegistry(NameProvider.NAME_PROVIDER_PORT);
-	    }
+            }
 
             nameProviderRequests = (Request) registry.lookup("//localhost:" + NameProvider.NAME_PROVIDER_PORT + "/ClientRequest");
 
@@ -224,7 +261,7 @@ public class HdfsClient {
                         usage();
                         return;
                     }
-                    HdfsWrite(fmt, args[2], 1);
+                    HdfsWrite(fmt, args[2], 2);
                     break;
                 case "list":
                     HdfsList();
